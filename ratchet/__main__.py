@@ -13,7 +13,7 @@ import json
 import sys
 
 from . import cases as case_store, extract, judge, matrix, report, runner
-from .config import ROOT, settings
+from .config import ROOT, RUNS, settings
 from .llm import stats as llm_stats
 from .sources import fixture, github, linear, slack
 from .sources.base import SourceError
@@ -97,6 +97,42 @@ def cmd_validate(args) -> None:
     print(json.dumps(judge.validate(), indent=2))
 
 
+def cmd_compare_graders(args) -> None:
+    """Are generated graders good enough to trust? Measured, not asserted.
+
+    The hand-written graders are the ground truth, so this runs both over the
+    same documents and reports where they part company.
+    """
+    from . import genjudge
+
+    path = RUNS / "latest.json"
+    if not path.exists():
+        raise SystemExit(
+            f"no run at {path} — run `python -m ratchet run --source fixture` first, "
+            "since this compares graders over the documents that run produced")
+    payload = json.loads(path.read_text())
+    briefs = target.load_briefs()
+
+    res = genjudge.compare(judge.REFERENCE_RULES, payload, briefs)
+    print(genjudge.report_lines(res))
+
+    if res["disagreements"]:
+        print(f"\n  {len(res['disagreements'])} disagreement(s) — hand-written verdict first:")
+        for d in res["disagreements"][:args.show]:
+            print(f"    {d['case']:28} {d['version']}  "
+                  f"hand={'pass' if d['hand'] else 'FAIL'} gen={'pass' if d['gen'] else 'FAIL'}")
+            print(f"      hand: {d['hand_reason'][:90]}")
+            print(f"      gen:  {d['gen_reason'][:90]}")
+        if len(res["disagreements"]) > args.show:
+            print(f"    ... and {len(res['disagreements']) - args.show} more "
+                  f"(raise --show to see them)")
+
+    out = RUNS / "compare_graders.json"
+    out.write_text(json.dumps(res, indent=2))
+    print(f"\nllm calls: {llm_stats()}")
+    print(f"full detail incl. every generated spec: {out}")
+
+
 def cmd_seed(args) -> None:
     from .seed import main as seed_main
     seed_main()
@@ -118,6 +154,12 @@ def main() -> None:
 
     v = sub.add_parser("validate"); v.set_defaults(fn=cmd_validate)
     s = sub.add_parser("seed"); s.set_defaults(fn=cmd_seed)
+
+    cg = sub.add_parser("compare-graders",
+                        help="generated graders vs the hand-written ones, per rule")
+    cg.add_argument("--show", type=int, default=12,
+                    help="how many individual disagreements to print")
+    cg.set_defaults(fn=cmd_compare_graders)
 
     args = ap.parse_args()
     args.fn(args)

@@ -75,6 +75,9 @@ def test_legalname_short_circuits_when_brief_supplies_one():
     assert v.passed and v.grader == "deterministic"
 
 
-def test_every_rule_has_a_grader():
-    from ratchet.extract import RULE_MENU
-    assert set(RULE_MENU) == set(judge.GRADERS)
+def test_every_reference_rule_has_a_grader():
+    """The reference set and the hand-written graders must stay in lockstep —
+    `compare-graders` generates one grader per REFERENCE_RULES entry and measures
+    it against GRADERS[rule], so a rule in one and not the other is a silent hole."""
+    assert set(judge.REFERENCE_RULES) == set(judge.GRADERS)
+    assert all(judge.REFERENCE_RULES[r].strip() for r in judge.REFERENCE_RULES)

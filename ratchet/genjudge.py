@@ -27,11 +27,17 @@ graders win, so a model call is the last resort, not the first):
 
 from __future__ import annotations
 
+import concurrent.futures as cf
+import functools
 import json
 import re
-from dataclasses import dataclass, asdict, field
+# aliased: GraderSpec has an attribute called `field`, which would otherwise
+# shadow dataclasses.field inside the class body.
+from dataclasses import dataclass, asdict, field as dc_field
 from typing import Any, Literal, Sequence
 
+from . import judge
+from .cases import Case
 from .judge import NUM_WORD, Verdict
 from .llm import complete_json
 
@@ -56,7 +62,7 @@ class GraderSpec:
     kind: Literal["regex_present", "regex_absent", "numeric_match", "llm_rubric"]
     pattern: str | None = None       # regex kinds, and the number-capture for numeric_match
     field: str | None = None         # numeric_match: which brief value to compare against
-    steps: list[str] = field(default_factory=list)   # llm_rubric: the generated evaluation steps
+    steps: list[str] = dc_field(default_factory=list)  # llm_rubric: the generated evaluation steps
     rationale: str = ""
 
     def to_dict(self) -> dict[str, Any]:
@@ -164,6 +170,21 @@ def derive_spec(expectation: str, fields: Sequence[str] = ()) -> GraderSpec:
 
     return GraderSpec(kind=kind, pattern=pattern, field=spec_field,
                       steps=steps, rationale=rationale)
+
+
+@functools.lru_cache(maxsize=512)
+def _spec_cached(expectation: str, fields: tuple[str, ...]) -> GraderSpec:
+    return derive_spec(expectation, fields)
+
+
+def spec_for(expectation: str, brief: dict) -> GraderSpec:
+    """The spec for one expectation, derived once per process.
+
+    `derive_spec` is already cached on disk at the model layer, so this only
+    saves re-parsing — but grading is 60 cases × 5 versions, and re-deriving the
+    same spec 300 times is noise in the logs nobody needs.
+    """
+    return _spec_cached(expectation.strip(), tuple(sorted(brief_fields(brief))))
 
 
 def _fallback(expectation: str, why: str) -> GraderSpec:
@@ -299,3 +320,102 @@ def _grade_numeric(spec: GraderSpec, rx: re.Pattern, text: str, brief: dict) -> 
                        str(h)[:160], grader="generated:numeric_match")
     return Verdict(False, f"captured {hits[0]!r}, which is not a number",
                    str(hits[0])[:160], grader="generated:numeric_match")
+
+
+# ----------------------------------------------- is the generated grader any good?
+
+def reference_cases(rules: dict[str, str], briefs: list[dict]) -> list[Case]:
+    """One case per reference rule per brief, built here rather than read from disk.
+
+    `compare-graders` must not depend on what extraction happened to produce —
+    extraction now invents its own slugs, so cases.json holds different rules on
+    every corpus. Constructing the grid from the reference set is what makes this
+    number reproducible by someone else from one command.
+    """
+    return [
+        Case(id=f"{rule}::{b['id']}", rule=rule, title=rule, expectation=exp,
+             brief_id=b["id"], grader="reference", source_app="reference",
+             source_id=rule, source_text=exp)
+        for rule, exp in sorted(rules.items())
+        for b in briefs
+    ]
+
+
+def compare(rules: dict[str, str], payload: dict, briefs: list[dict],
+            workers: int = 6) -> dict[str, Any]:
+    """Generated graders vs the hand-written ones, over every case × version.
+
+    The ten hand-written graders are the ground truth here — not because they are
+    right in some absolute sense, but because they are the thing already validated
+    against human labels. Agreement bounds how far generation can be trusted, and
+    the disagreements are the interesting output: they say *where* generation
+    fails, which a single percentage cannot.
+    """
+    by_id = {b["id"]: b for b in briefs}
+    fields = sorted(brief_fields(briefs[0])) if briefs else []
+    cases = reference_cases(rules, briefs)
+
+    specs: dict[str, GraderSpec] = {}
+    with cf.ThreadPoolExecutor(max_workers=workers) as ex:
+        futs = {r: ex.submit(derive_spec, exp, fields) for r, exp in rules.items()}
+        for r, f in futs.items():
+            specs[r] = f.result()
+
+    versions = payload["versions"]
+    jobs = [(c, v) for v in versions for c in cases if c.rule in specs]
+
+    def one(job: tuple[Case, str]) -> dict[str, Any]:
+        c, v = job
+        doc = payload["runs"][v]["docs"].get(c.brief_id)
+        if doc is None:
+            raise RuntimeError(
+                f"compare-graders: no document for {c.brief_id} at {v} in latest.json")
+        brief = by_id[c.brief_id]
+        hand = judge.grade(c, doc, brief)
+        gen = grade_generated(specs[c.rule], doc, brief, rules[c.rule])
+        return {"case": c.id, "rule": c.rule, "version": v,
+                "hand": hand.passed, "gen": gen.passed,
+                "hand_reason": hand.reason, "gen_reason": gen.reason}
+
+    rows: list[dict[str, Any]] = []
+    with cf.ThreadPoolExecutor(max_workers=workers) as ex:
+        for r in ex.map(one, jobs):
+            rows.append(r)
+
+    per_rule: dict[str, dict[str, Any]] = {}
+    for r in rows:
+        d = per_rule.setdefault(r["rule"], {"n": 0, "agree": 0, "kind": specs[r["rule"]].kind})
+        d["n"] += 1
+        d["agree"] += int(r["hand"] == r["gen"])
+
+    agree = sum(1 for r in rows if r["hand"] == r["gen"])
+    return {
+        "n": len(rows),
+        "agree": agree,
+        "agreement": round(agree / len(rows), 4) if rows else 0.0,
+        "per_rule": per_rule,
+        "specs": {r: s.to_dict() for r, s in specs.items()},
+        "disagreements": [r for r in rows if r["hand"] != r["gen"]],
+    }
+
+
+def report_lines(res: dict[str, Any]) -> str:
+    """Per-rule cells, never the single number on its own (CLAUDE.md rule 5)."""
+    out = [f"generated vs hand-written graders: {res['agree']}/{res['n']} "
+           f"= {res['agreement']:.1%} agreement"]
+
+    items = sorted(res["per_rule"].items(), key=lambda kv: (-kv[1]["agree"] / kv[1]["n"], kv[0]))
+    perfect = [r for r, d in items if d["agree"] == d["n"]]
+    divergent = [(r, d) for r, d in items if d["agree"] != d["n"]]
+
+    if perfect:
+        out.append("  perfect:    " + ", ".join(perfect))
+    if divergent:
+        out.append("  divergent:  " + ", ".join(
+            f"{r} {d['agree']}/{d['n']}" for r, d in divergent))
+
+    out.append("\n  spec kind chosen per rule:")
+    for r, d in sorted(res["per_rule"].items()):
+        out.append(f"    {r:12} {d['kind']:16} {d['agree']}/{d['n']}")
+    return "\n".join(out)
+

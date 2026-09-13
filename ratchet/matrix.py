@@ -34,9 +34,15 @@ def build(payload: dict, cases: list[Case]) -> dict[str, Any]:
             states.append(state)
             reasons.append((r or {}).get("reason", "no result"))
             prev_passed = passed
+        # Which instrument actually ran is a property of the verdict, not of the
+        # case: since extraction stopped classifying into a menu, most rules get
+        # a grader generated from their expectation, and the report must not
+        # flatten "regex" and "asked a model" into one word.
+        ran = next((runs[v]["results"][c.id]["grader"] for v in versions
+                    if runs[v]["results"].get(c.id, {}).get("grader")), c.grader)
         rows.append({
             "id": c.id, "rule": c.rule, "brief": c.brief_id, "title": c.title,
-            "grader": c.grader, "source_app": c.source_app,
+            "grader": ran, "source_app": c.source_app,
             "from_fix": c.derived_from_fix,
             "states": states, "reasons": reasons,
         })

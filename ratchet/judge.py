@@ -209,12 +209,48 @@ GRADERS: dict[str, Callable[[str, dict], Verdict]] = {
 
 LLM_RULES = {"legalname"}
 
+# The ten rules these graders were written for, with the expectation each one
+# encodes. This is the reference set: `compare-graders` generates a grader from
+# each expectation and measures it against the hand-written one above.
+#
+# It lives here rather than in extract.py because extraction no longer has a menu
+# to classify into — these are a property of the graders, not of extraction.
+REFERENCE_RULES: dict[str, str] = {
+    "date":      "every date is written in the form '14 June 2026', with no abbreviated or misspelled month",
+    "totals":    "the Total stated in the fee table equals the arithmetic sum of the phase fees",
+    "percent":   "a percentage written in words agrees with the numeral beside it, as in 'fifty percent (50%)'",
+    "headings":  "the document uses a numbered heading hierarchy, with at least four numbered headings",
+    "legalname": "when the brief supplies no client legal entity name, a placeholder is left rather than a legal name being invented",
+    "daterange": "the engagement end date falls after the start date",
+    "assume":    "the document contains an Assumptions section",
+    "currency":  "a single currency symbol is used throughout, matching the currency named in the brief",
+    "termmatch": "the term length stated in the body matches the engagement length quoted in the brief",
+    "excl":      "the document contains an Exclusions section",
+}
+
 
 def grade(case: Case, output: str, brief: dict) -> Verdict:
+    """The one entry point for grading, so runner.py stays pure orchestration.
+
+    A rule with a hand-written grader uses it. Everything else — which, since
+    extraction stopped classifying into a menu, is most rules — gets a grader
+    generated from the case's expectation. The Verdict's `grader` field records
+    which path ran, so a run never hides that distinction.
+
+    `genjudge` is imported inside the function because it imports Verdict from
+    here; deferring it breaks the cycle without moving the type somewhere it
+    does not belong.
+    """
     fn = GRADERS.get(case.rule)
-    if fn is None:
-        return Verdict(False, f"no grader registered for rule {case.rule!r}")
-    return fn(output, brief)
+    if fn is not None:
+        return fn(output, brief)
+
+    if not case.expectation.strip():
+        return Verdict(False, f"rule {case.rule!r} has no grader and no expectation to build one from")
+
+    from . import genjudge
+    spec = genjudge.spec_for(case.expectation, brief)
+    return genjudge.grade_generated(spec, output, brief, case.expectation)
 
 
 # ------------------------------------------------------------- validation
