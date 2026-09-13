@@ -75,6 +75,35 @@ def test_legalname_short_circuits_when_brief_supplies_one():
     assert v.passed and v.grader == "deterministic"
 
 
+def test_generated_graders_never_score_a_suite():
+    """Only measured graders score. An unknown rule raises rather than guessing.
+
+    This is the regression that mattered: when judge.grade() fell back to a
+    generated grader, every version scored 60/60 and the suite stopped finding
+    anything. Missing data is a distinct state from a passing case.
+    """
+    import pytest
+    from ratchet.cases import Case
+
+    c = Case(id="invented::t", rule="invented_rule", title="t",
+             expectation="something a model made up", brief_id="t",
+             grader="derived", source_app="s", source_id="i", source_text="x")
+    with pytest.raises(RuntimeError) as e:
+        judge.grade(c, "any document at all", BRIEF)
+    assert "no grader registered" in str(e.value)
+    assert "compare-graders" in str(e.value), "the error should say where generation lives"
+
+
+def test_reference_cases_cover_every_rule_and_brief():
+    briefs = [{"id": "a"}, {"id": "b"}]
+    cases = judge.reference_cases(briefs)
+    assert len(cases) == len(judge.REFERENCE_RULES) * 2
+    assert {c.rule for c in cases} == set(judge.GRADERS)
+    # every one of them must be gradeable by a hand-written grader
+    assert all(c.rule in judge.GRADERS for c in cases)
+    assert {c.grader for c in cases} == {"deterministic", "llm"}
+
+
 def test_every_reference_rule_has_a_grader():
     """The reference set and the hand-written graders must stay in lockstep —
     `compare-graders` generates one grader per REFERENCE_RULES entry and measures

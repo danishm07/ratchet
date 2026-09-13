@@ -28,7 +28,6 @@ graders win, so a model call is the last resort, not the first):
 from __future__ import annotations
 
 import concurrent.futures as cf
-import functools
 import json
 import re
 # aliased: GraderSpec has an attribute called `field`, which would otherwise
@@ -138,19 +137,34 @@ Return ONLY JSON:
   "rationale": "<one sentence: why this kind and this check>"}}"""
 
 
+class SpecError(RuntimeError):
+    """No spec could be derived. Missing data, not a grader that passes."""
+
+
 def derive_spec(expectation: str, fields: Sequence[str] = ()) -> GraderSpec:
     """One cached model call: expectation -> executable spec.
 
-    A model that returns something unusable (bad kind, uncompilable pattern,
-    unknown field) degrades to an `llm_rubric` over the raw expectation. That is
-    a real, countable outcome and `rationale` says so — it is never silently
-    treated as a working deterministic grader.
+    Two different failures, deliberately handled differently:
+
+    - The model produced *nothing usable* (no JSON, no recognised kind). That is
+      missing data and it **raises**. It used to degrade to a one-step rubric
+      saying "decide whether the document satisfies <expectation>", which is
+      vague enough to pass almost anything — so a parse failure turned into a
+      grader that scored, and scored everything as a pass. CLAUDE.md rule 6:
+      missing data is a distinct state from a failing case.
+    - The model produced a *coherent but unusable* spec — a pattern that will not
+      compile, a nested quantifier, a brief field that does not exist. That is a
+      real answer we are declining to run, so it degrades to a rubric whose
+      rationale records exactly what was refused and why.
     """
     menu = "\n".join(f"  {f}" for f in fields) or "  (none available)"
     data = complete_json(SPEC_PROMPT.format(fields=menu, expectation=expectation.strip()))
 
     if not isinstance(data, dict) or data.get("kind") not in KINDS:
-        return _fallback(expectation, "model returned no usable spec")
+        got = type(data).__name__ if data is not None else "nothing"
+        raise SpecError(
+            f"no spec derived for {expectation.strip()[:80]!r} — model returned {got}"
+            + (f" with kind={data.get('kind')!r}" if isinstance(data, dict) else ""))
 
     kind = data["kind"]
     pattern = data.get("pattern") or None
@@ -170,21 +184,6 @@ def derive_spec(expectation: str, fields: Sequence[str] = ()) -> GraderSpec:
 
     return GraderSpec(kind=kind, pattern=pattern, field=spec_field,
                       steps=steps, rationale=rationale)
-
-
-@functools.lru_cache(maxsize=512)
-def _spec_cached(expectation: str, fields: tuple[str, ...]) -> GraderSpec:
-    return derive_spec(expectation, fields)
-
-
-def spec_for(expectation: str, brief: dict) -> GraderSpec:
-    """The spec for one expectation, derived once per process.
-
-    `derive_spec` is already cached on disk at the model layer, so this only
-    saves re-parsing — but grading is 60 cases × 5 versions, and re-deriving the
-    same spec 300 times is noise in the logs nobody needs.
-    """
-    return _spec_cached(expectation.strip(), tuple(sorted(brief_fields(brief))))
 
 
 def _fallback(expectation: str, why: str) -> GraderSpec:
@@ -324,23 +323,6 @@ def _grade_numeric(spec: GraderSpec, rx: re.Pattern, text: str, brief: dict) -> 
 
 # ----------------------------------------------- is the generated grader any good?
 
-def reference_cases(rules: dict[str, str], briefs: list[dict]) -> list[Case]:
-    """One case per reference rule per brief, built here rather than read from disk.
-
-    `compare-graders` must not depend on what extraction happened to produce —
-    extraction now invents its own slugs, so cases.json holds different rules on
-    every corpus. Constructing the grid from the reference set is what makes this
-    number reproducible by someone else from one command.
-    """
-    return [
-        Case(id=f"{rule}::{b['id']}", rule=rule, title=rule, expectation=exp,
-             brief_id=b["id"], grader="reference", source_app="reference",
-             source_id=rule, source_text=exp)
-        for rule, exp in sorted(rules.items())
-        for b in briefs
-    ]
-
-
 def compare(rules: dict[str, str], payload: dict, briefs: list[dict],
             workers: int = 6) -> dict[str, Any]:
     """Generated graders vs the hand-written ones, over every case × version.
@@ -353,13 +335,19 @@ def compare(rules: dict[str, str], payload: dict, briefs: list[dict],
     """
     by_id = {b["id"]: b for b in briefs}
     fields = sorted(brief_fields(briefs[0])) if briefs else []
-    cases = reference_cases(rules, briefs)
+    cases = judge.reference_cases(briefs)
 
     specs: dict[str, GraderSpec] = {}
+    spec_failures: dict[str, str] = {}
     with cf.ThreadPoolExecutor(max_workers=workers) as ex:
         futs = {r: ex.submit(derive_spec, exp, fields) for r, exp in rules.items()}
         for r, f in futs.items():
-            specs[r] = f.result()
+            try:
+                specs[r] = f.result()
+            except SpecError as e:
+                # Counted and reported, never graded. A rule with no spec is a
+                # hole in the comparison, and a hole is not 100% agreement.
+                spec_failures[r] = str(e)
 
     versions = payload["versions"]
     jobs = [(c, v) for v in versions for c in cases if c.rule in specs]
@@ -395,6 +383,8 @@ def compare(rules: dict[str, str], payload: dict, briefs: list[dict],
         "agreement": round(agree / len(rows), 4) if rows else 0.0,
         "per_rule": per_rule,
         "specs": {r: s.to_dict() for r, s in specs.items()},
+        "spec_failures": spec_failures,
+        "ungraded_cases": len(spec_failures) * len(briefs) * len(versions),
         "disagreements": [r for r in rows if r["hand"] != r["gen"]],
     }
 
@@ -403,6 +393,12 @@ def report_lines(res: dict[str, Any]) -> str:
     """Per-rule cells, never the single number on its own (CLAUDE.md rule 5)."""
     out = [f"generated vs hand-written graders: {res['agree']}/{res['n']} "
            f"= {res['agreement']:.1%} agreement"]
+
+    if res.get("spec_failures"):
+        out.append(f"  !! {len(res['spec_failures'])} rule(s) produced NO SPEC — "
+                   f"{res['ungraded_cases']} gradings are missing, not passing:")
+        for r, why in sorted(res["spec_failures"].items()):
+            out.append(f"     {r}: {why}")
 
     items = sorted(res["per_rule"].items(), key=lambda kv: (-kv[1]["agree"] / kv[1]["n"], kv[0]))
     perfect = [r for r, d in items if d["agree"] == d["n"]]
@@ -414,8 +410,17 @@ def report_lines(res: dict[str, Any]) -> str:
         out.append("  divergent:  " + ", ".join(
             f"{r} {d['agree']}/{d['n']}" for r, d in divergent))
 
-    out.append("\n  spec kind chosen per rule:")
+    out.append("\n  the grader generated for each rule:")
     for r, d in sorted(res["per_rule"].items()):
-        out.append(f"    {r:12} {d['kind']:16} {d['agree']}/{d['n']}")
+        s = res["specs"][r]
+        out.append(f"    {r:12} {s['kind']:14} {d['agree']}/{d['n']}")
+        if s.get("pattern"):
+            out.append(f"      pattern: {s['pattern']}")
+        if s.get("field"):
+            out.append(f"      compared against brief field: {s['field']}")
+        for step in s.get("steps") or []:
+            out.append(f"      step: {step}")
+        if s.get("rationale"):
+            out.append(f"      why:     {s['rationale']}")
     return "\n".join(out)
 

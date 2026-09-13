@@ -59,18 +59,13 @@ def cmd_run(args) -> None:
         print(f"  subsumption merged {ex_stats['merged']} duplicate rule(s): " +
               ", ".join(f"{m['dropped']}→{m['into']}" for m in ex_stats["merges"][:4]))
 
-    # Which graders score the suite is a choice, and it is printed rather than
-    # assumed. `derived` is the new capability — rules the model named itself,
-    # graded by specs it generated. `reference` is the validated ten, and is the
-    # only set whose agreement with human labels has been measured, so it is what
-    # any believed number should come from (CLAUDE.md rule 3).
-    if args.graders == "reference":
-        from . import genjudge
-        cs = genjudge.reference_cases(judge.REFERENCE_RULES, briefs)
-        print(f"  grading with the REFERENCE graders: {len(judge.REFERENCE_RULES)} "
-              f"hand-written rules -> {len(cs)} cases")
-    else:
-        print(f"  grading with GENERATED graders derived from each rule's expectation")
+    # The suite is scored by the hand-written graders, full stop. They are the
+    # only ones whose agreement with human labels has been measured, and an
+    # unvalidated judge is a rubber ruler (CLAUDE.md rule 3). Generated graders
+    # are measured against these by `compare-graders`; they never score a run.
+    cs = judge.reference_cases(briefs)
+    print(f"  scored by {len(judge.REFERENCE_RULES)} hand-written graders "
+          f"-> {len(cs)} cases")
     case_store.save(cs)
 
     val = judge.validate()
@@ -166,10 +161,6 @@ def main() -> None:
 
     r = sub.add_parser("run")
     r.add_argument("--source", default="live", choices=["live", "fixture"])
-    r.add_argument("--graders", default="derived", choices=["derived", "reference"],
-                   help="'derived' grades the model-named rules with generated specs; "
-                        "'reference' grades the ten hand-written rules whose agreement "
-                        "with human labels has actually been measured")
     r.add_argument("--versions", default="v1,v2,v3,v4,v5")
     r.add_argument("--candidates", action="store_true")
     r.add_argument("--variance", action="store_true",

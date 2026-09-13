@@ -177,12 +177,29 @@ def test_numeric_match_rejects_a_field_the_brief_does_not_have(monkeypatch):
     assert "unknown brief field" in spec.rationale
 
 
-def test_unparseable_model_response_degrades_to_a_rubric(monkeypatch):
+def test_unparseable_model_response_raises_instead_of_grading(monkeypatch):
+    """The bug that made every version score 60/60.
+
+    A parse failure used to become a one-step rubric ("decide whether the
+    document satisfies <expectation>"), which is vague enough to pass almost
+    anything. So a failure to derive a grader silently became a grader that
+    passed everything. Missing data is not a passing case.
+    """
+    import pytest
+
     monkeypatch.setattr(genjudge, "complete_json", lambda *a, **k: None)
-    spec = genjudge.derive_spec("the letter states a 30-day return window")
-    assert spec.kind == "llm_rubric"
-    assert "no usable spec" in spec.rationale
-    assert spec.steps, "a fallback rubric still has to have something to grade against"
+    with pytest.raises(genjudge.SpecError) as e:
+        genjudge.derive_spec("the letter states a 30-day return window")
+    assert "no spec derived" in str(e.value)
+
+
+def test_a_list_response_is_not_mistaken_for_a_spec(monkeypatch):
+    """complete_json used to hand back the inner `steps` array as the whole value."""
+    import pytest
+
+    monkeypatch.setattr(genjudge, "complete_json", lambda *a, **k: ["step one", "step two"])
+    with pytest.raises(genjudge.SpecError):
+        genjudge.derive_spec("anything")
 
 
 def test_no_generated_code_is_ever_executed():

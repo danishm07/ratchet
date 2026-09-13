@@ -46,7 +46,7 @@ sources:
 
 extraction: 15 items -> 11 checkable -> 10 rules -> 60 cases (4 discarded, 0 unparseable)
   subsumption merged 1 duplicate rule(s): fee_currency_consistency→currency_symbol_consistency
-  grading with the REFERENCE graders: 10 hand-written rules -> 60 cases
+  scored by 10 hand-written graders -> 60 cases
 judge validation: 20/20 agreement with human labels = 100% on rule 'legalname'
 
 v1: 55/60 = 0.92
@@ -68,7 +68,7 @@ failure mode this exists to expose.
 not the numbers a previous run produced.** Every figure in this README is whatever
 the commands actually printed today; where a claim could not be re-measured in time
 it is marked as such rather than carried over. §4 is the accounting, including the
-two measurement bugs found and the place where generation fails outright.
+four bugs found in the measuring instrument — and none in the system it measures.
 
 ---
 
@@ -115,7 +115,7 @@ open data/runs/report.html
 Run the tests — they pin every measurement bug found during the build:
 
 ```bash
-python -m pytest tests -q      # 35 passed
+python -m pytest tests -q      # 46 passed
 ```
 
 Offline, no tokens required — runs the identical pipeline against the same corpus
@@ -128,17 +128,17 @@ python -m ratchet run --source fixture --candidates
 The four commands that reproduce every number below:
 
 ```bash
-python -m pytest tests -q                                  # 35 passed
-python -m ratchet run --source fixture --graders reference  # the per-case matrix
-python -m ratchet compare-graders                           # generated vs hand-written
-python -m ratchet loop --dry-run                            # regression -> verified fix -> PR
+python -m pytest tests -q             # 46 passed
+python -m ratchet run --source fixture # the per-case matrix
+python -m ratchet compare-graders      # generated vs hand-written graders
+python -m ratchet loop --dry-run       # regression -> verified fix -> draft PR
 ```
 
-**Which graders score the suite is a flag, not an assumption.** `--graders
-reference` uses the ten hand-written graders — the only ones whose agreement with
-human labels has been measured, so they are what any believed number comes from.
-`--graders derived` (the default) uses rules the model named itself, graded by
-specs it generated. The two disagree, substantially, and §4 says by how much.
+**Only the hand-written graders ever score a suite.** They are the ones whose
+agreement with human labels has been measured, so they are what every number here
+comes from. Graders generated from a failure description are reachable through
+`compare-graders` alone, which measures them *against* the hand-written ones — §4
+says by how much, and why they are not trusted to score anything yet.
 
 `python -m ratchet loop` writes to Linear and GitHub for real. `--dry-run`
 exercises the entire path — detection, candidate generation, full-suite
@@ -268,25 +268,63 @@ risk catastrophic backtracking, fields the brief does not have) are refused at
 derivation time and degrade to a rubric that says why. A test walks the module's AST
 and asserts there is no `exec`, `eval`, `compile` or `__import__` anywhere in it.
 
-### The generated graders are too lenient to be a ratchet
+### Generated graders do not score anything, by construction
 
-This is the finding that matters most, and it only shows up end-to-end. Run the
-identical suite under each grader set:
+`judge.grade()` dispatches to the hand-written graders and nothing else. A rule it
+does not recognise **raises** — it does not score zero and it does not score a pass,
+because a case with no grader is missing data and CLAUDE.md rule 6 makes that a
+distinct state from a failing case. `genjudge.py` is reachable from
+`compare-graders` alone, where its output is measured against the hand-written
+graders rather than believed.
 
-| graders | v1 | v2 | v3 | v4 | v5 | regressions found |
-|---|---|---|---|---|---|---|
-| `reference` (hand-written, validated) | 55/60 | 59/60 | 56/60 | 59/60 | 60/60 | **5** |
-| `derived` (model-named rules, generated specs) | 60/60 | 60/60 | 60/60 | 60/60 | 60/60 | **0** |
+That boundary was not always there, and the story of removing it is §4's third bug.
 
-85.7% agreement sounds like a grader you could ship. It is not, because the errors
-are **not symmetric**: they are biased toward passing. A suite that passes
-everything has a perfect score and zero diagnostic value — the ratchet has no teeth.
-Generation is good enough to *propose* graders for a human to review, and not good
-enough to score a release unattended. That is the honest bound on the whole idea,
-and it is why `--graders reference` exists and why the matrix above is generated
-with it.
+### The third measurement bug: a JSON parse that succeeded with the wrong value
 
-### A second measurement bug, found today: the cache stampede
+An earlier build let generated graders score the suite. Every version came back
+**60/60** — a perfect score, five regressions lost, and a ratchet with no teeth. The
+tempting reading was "generated graders are inherently too lenient." That reading
+was wrong, and the spec dump is what disproved it.
+
+Five of ten rules reported `fell back to llm_rubric — model returned no usable
+spec`. But the model's output was fine:
+
+```json
+{"kind": "llm_rubric", "pattern": null, "steps": ["...", "..."], "rationale": "..."}
+```
+
+The fault was in `complete_json`, which looked for `[`…`]` before `{`…`}`. It found
+the **nested `steps` array**, matched it against the last `]` in the response, and
+returned that list as if it were the whole answer. Four fields silently vanished.
+The parse did not fail — it succeeded, with the wrong value, which is the harder
+kind to notice.
+
+`derive_spec` then saw a non-dict and degraded to a one-step rubric reading *"decide
+whether the document satisfies &lt;expectation&gt;"*. Vague enough to pass almost
+anything. So **a parse failure quietly became a grader that passed everything.**
+
+Both halves are fixed:
+
+- `complete_json` now scans from the first opener to *its own* matching closer,
+  tracking string literals and escapes so a `{1,4}` inside a generated regex cannot
+  terminate the object. Eight cases in `tests/test_llm_json.py` pin it.
+- `derive_spec` **raises** `SpecError` when no spec can be derived, instead of
+  substituting a lenient default. A coherent-but-unsafe spec (uncompilable pattern,
+  nested quantifier, unknown brief field) still degrades to a rubric, because that
+  is a real answer being declined rather than an absent one — and the rationale says
+  which. `compare-graders` reports any rule that produced no spec as *ungraded*, not
+  as agreement.
+
+After the fix, zero of ten derived rules fall back, and the generated graders fail
+7/60 cases on v1 where they previously failed 0/60. They discriminate again.
+
+**The conclusion survives the correction, but the evidence for it is weaker than it
+looked.** Generated graders still should not score a release unattended — agreement
+is 85.7%, and `termmatch` at 8/30 and `legalname` at 14/30 are not close. What is no
+longer true is the dramatic version of that claim: the 60/60 table was a bug in this
+repo, not a property of generated graders.
+
+### The second measurement bug: the cache stampede
 
 The first run under generated graders scored the *same rule* with a regex on one
 brief and an LLM rubric on another, inside a single run. The cause was one layer
@@ -300,8 +338,9 @@ takes a per-key lock and re-checks the cache after acquiring it, so concurrent
 callers asking the identical question wait for the first answer instead of buying
 their own. The warm-cache fast path is untouched.
 
-That makes three bugs found in the instrument during this build and none in the
-system under test, which is either very funny or the entire thesis.
+That makes **four bugs found in the instrument** during this build — two markdown-blind
+graders, a silent-pass in `g_percent`, the cache stampede, and the JSON parse above —
+and none in the system under test. Which is either very funny or the entire thesis.
 
 ### Most graders are deterministic, by design
 
@@ -359,11 +398,13 @@ spare.** The rest are suggestive, not established.
 
 ### Known limitations, stated plainly
 
-- **Generated graders cannot be trusted to score a release.** 85.7% agreement, with
-  errors biased toward passing: under generated graders the suite scores 60/60 on
-  every version and finds none of the five regressions the validated graders find.
-  Good enough to propose a grader for review; not good enough to run unattended.
-  This is the single biggest limitation here.
+- **Generated graders cannot be trusted to score a release.** 85.7% agreement is not
+  close enough, and two rules are badly wrong (`termmatch` 8/30, `legalname` 14/30).
+  Good enough to propose a grader for a human to review; not good enough to run
+  unattended, so `judge.grade()` will not call one. An earlier build let them score
+  and every version came back 60/60 — that turned out to be a JSON parse bug rather
+  than a property of generation, but the boundary stays until agreement is measured
+  much higher.
 - **The loop rejects candidates it probably should not.** PASS_TO_PASS cannot tell a
   real break from a case that was going to flip anyway, and all three rejections in
   §5 are on an unstable rule. It fails safe, but it fails.

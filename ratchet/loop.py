@@ -176,9 +176,8 @@ def propose(reg: Regression, n: int = 3) -> list[Candidate]:
         current="\n".join(f"  - {r}: {target.RULES[r]}" for r in current),
         available="\n".join(f"  - {k}: {v}" for k, v in target.RULES.items()),
     ))
-    # complete_json scans for '[' before '{', so a {"candidates": [...]} wrapper
-    # comes back as the bare inner array. Accept either rather than depending on
-    # which shape the model picked.
+    # The prompt asks for a bare array, but accept a {"candidates": [...]} wrapper
+    # too rather than depending on which shape the model picked.
     rows = data if isinstance(data, list) else (
         data.get("candidates") if isinstance(data, dict) else None)
     if not isinstance(rows, list) or not rows:

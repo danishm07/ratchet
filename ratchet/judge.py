@@ -229,28 +229,42 @@ REFERENCE_RULES: dict[str, str] = {
 }
 
 
+def reference_cases(briefs: list[dict]) -> list[Case]:
+    """One case per reference rule per brief — the suite that actually gets scored.
+
+    Built here rather than read from disk so the number is reproducible from one
+    command: extraction names its own rules now, so cases.json holds different
+    slugs on every corpus, while the scored grid must stay fixed.
+    """
+    return [
+        Case(id=f"{rule}::{b['id']}", rule=rule, title=rule, expectation=exp,
+             brief_id=b["id"], grader="llm" if rule in LLM_RULES else "deterministic",
+             source_app="reference", source_id=rule, source_text=exp)
+        for rule, exp in sorted(REFERENCE_RULES.items())
+        for b in briefs
+    ]
+
+
 def grade(case: Case, output: str, brief: dict) -> Verdict:
     """The one entry point for grading, so runner.py stays pure orchestration.
 
-    A rule with a hand-written grader uses it. Everything else — which, since
-    extraction stopped classifying into a menu, is most rules — gets a grader
-    generated from the case's expectation. The Verdict's `grader` field records
-    which path ran, so a run never hides that distinction.
+    **Only hand-written graders score a suite.** These are the graders whose
+    agreement with human labels has been measured; a generated one has not
+    earned that job and does not get it here. `genjudge` is reachable from
+    `compare-graders` alone, where its output is measured against these rather
+    than believed.
 
-    `genjudge` is imported inside the function because it imports Verdict from
-    here; deferring it breaks the cycle without moving the type somewhere it
-    does not belong.
+    An unknown rule raises. It does not quietly score zero and it does not
+    quietly score a pass: a case with no grader is missing data, which
+    CLAUDE.md rule 6 makes a distinct state from a failing case.
     """
     fn = GRADERS.get(case.rule)
-    if fn is not None:
-        return fn(output, brief)
-
-    if not case.expectation.strip():
-        return Verdict(False, f"rule {case.rule!r} has no grader and no expectation to build one from")
-
-    from . import genjudge
-    spec = genjudge.spec_for(case.expectation, brief)
-    return genjudge.grade_generated(spec, output, brief, case.expectation)
+    if fn is None:
+        raise RuntimeError(
+            f"judge: no grader registered for rule {case.rule!r} (case {case.id!r}). "
+            f"Known rules: {', '.join(sorted(GRADERS))}. "
+            f"Generated graders are not a scoring path — see `ratchet compare-graders`.")
+    return fn(output, brief)
 
 
 # ------------------------------------------------------------- validation

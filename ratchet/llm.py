@@ -124,6 +124,51 @@ def complete(prompt: str, *, model: str | None = None, backend: str | None = Non
 _FENCE = re.compile(r"^```(?:json)?|```$", re.M)
 
 
+def _first_json_value(raw: str) -> str | None:
+    """The first complete JSON object or array in `raw`, brace-matched.
+
+    The obvious version — find('[') paired with rfind(']'), then the same for
+    braces — silently returns the wrong value for the most ordinary response
+    there is:
+
+        {"kind": "llm_rubric", "steps": ["a", "b"], "rationale": "..."}
+
+    find('[') lands on the *steps* array and rfind(']') on its closer, so the
+    caller gets `["a", "b"]` and never sees the object that contained it. Four
+    fields vanish and the parse looks like it succeeded. That is how every
+    generated grader that needed evaluation steps came back empty.
+
+    So: scan from the first opener to its own matching closer, tracking string
+    literals and escapes so a brace inside a regex pattern cannot end the value.
+    """
+    starts = [i for i in (raw.find("{"), raw.find("[")) if i != -1]
+    if not starts:
+        return None
+    i = min(starts)
+    opener = raw[i]
+    closer = "}" if opener == "{" else "]"
+    depth, in_str, esc = 0, False, False
+    for j in range(i, len(raw)):
+        ch = raw[j]
+        if in_str:
+            if esc:
+                esc = False
+            elif ch == "\\":
+                esc = True
+            elif ch == '"':
+                in_str = False
+            continue
+        if ch == '"':
+            in_str = True
+        elif ch == opener:
+            depth += 1
+        elif ch == closer:
+            depth -= 1
+            if depth == 0:
+                return raw[i : j + 1]
+    return None
+
+
 def complete_json(prompt: str, **kw: Any) -> Any:
     """Completion parsed as JSON. Returns None if the model produced no valid JSON.
 
@@ -131,11 +176,14 @@ def complete_json(prompt: str, **kw: Any) -> Any:
     skip it — a run with failed parses is a different thing from a clean run.
     """
     raw = _FENCE.sub("", complete(prompt, **kw).strip()).strip()
-    for opener, closer in (("[", "]"), ("{", "}")):
-        i, j = raw.find(opener), raw.rfind(closer)
-        if i != -1 and j > i:
-            try:
-                return json.loads(raw[i : j + 1])
-            except json.JSONDecodeError:
-                continue
-    return None
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        pass
+    span = _first_json_value(raw)
+    if span is None:
+        return None
+    try:
+        return json.loads(span)
+    except json.JSONDecodeError:
+        return None
