@@ -28,6 +28,7 @@ from __future__ import annotations
 import concurrent.futures as cf
 import re
 
+from . import progress
 from .cases import Case
 from .llm import complete_json
 from .sources.base import SourceItem
@@ -142,7 +143,10 @@ def dedupe(candidates: list[dict]) -> tuple[list[dict], list[dict]]:
     kept: list[dict] = []
     merges: list[dict] = []
 
-    for cand in ordered:
+    # Subsumption is the other place a cold run goes quiet: one model call per
+    # candidate per already-kept rule with a different slug.
+    for cand in progress.track(ordered, len(ordered), "deduping", "rules",
+                               done="deduped"):
         d = cand["data"]
         match = next((k for k in kept if k["data"]["rule_id"] == d["rule_id"]), None)
         if match is None:
@@ -163,7 +167,8 @@ def extract(items: list[SourceItem], briefs: list[dict], workers: int = 6) -> tu
     the complaint told us what to check, so we check it on every document."""
     results = []
     with cf.ThreadPoolExecutor(max_workers=workers) as ex:
-        for r in ex.map(_one, items):
+        for r in progress.track(ex.map(_one, items), len(items),
+                                "extracting", "items", done="extracted"):
             results.append(r)
 
     stats = {"items": len(items), "parse_failed": 0, "not_checkable": 0, "accepted": 0}

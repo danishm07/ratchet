@@ -7,7 +7,7 @@ import json
 import sys
 import time
 
-from . import judge
+from . import judge, progress
 from .cases import Case, load as load_cases
 from .config import RUNS
 from .llm import complete, stats as llm_stats
@@ -22,7 +22,9 @@ def generate(version: str, briefs: list[dict], workers: int = 6) -> dict[str, st
         return b["id"], complete(target.prompt_for(version, b))
     out = {}
     with cf.ThreadPoolExecutor(max_workers=workers) as ex:
-        for bid, text in ex.map(one, briefs):
+        for bid, text in progress.track(ex.map(one, briefs), len(briefs),
+                                        f"generating {version}", "documents",
+                                        done=f"generated {version}"):
             out[bid] = text
     return out
 
@@ -38,7 +40,9 @@ def run_version(version: str, cases: list[Case], briefs: list[dict],
 
     results = {}
     with cf.ThreadPoolExecutor(max_workers=workers) as ex:
-        for cid, v in ex.map(one, cases):
+        for cid, v in progress.track(ex.map(one, cases), len(cases),
+                                     f"grading {version}", "cases",
+                                     done=f"graded {version}"):
             results[cid] = v.to_dict()
 
     return {"version": version, "results": results, "docs": docs}
