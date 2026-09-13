@@ -1,0 +1,74 @@
+[
+  {
+    "id": "meridian",
+    "client": "Meridian Foods",
+    "client_legal_name": null,
+    "engagement": "Supplier cost benchmarking",
+    "currency": "USD",
+    "start": "2026-06-14",
+    "engagement_length_months": 12,
+    "phases": [{"name": "Discovery", "fee": 48000}, {"name": "Analysis", "fee": 36000}],
+    "deposit": "fifty percent",
+    "notes": "Legal entity name not yet confirmed by client counsel."
+  },
+  {
+    "id": "harbourline",
+    "client": "Harbourline Logistics",
+    "client_legal_name": "Harbourline Logistics Ltd",
+    "engagement": "Warehouse network redesign",
+    "currency": "GBP",
+    "start": "2026-09-01",
+    "engagement_length_months": 6,
+    "phases": [{"name": "Mapping", "fee": 22000}, {"name": "Modelling", "fee": 31500}, {"name": "Rollout plan", "fee": 18500}],
+    "deposit": "thirty percent",
+    "notes": "Client operates in GBP only. Rush engagement."
+  },
+  {
+    "id": "calder",
+    "client": "Calder Health",
+    "client_legal_name": null,
+    "engagement": "Claims processing diagnostic",
+    "currency": "USD",
+    "start": "2026-07-20",
+    "engagement_length_months": 3,
+    "phases": [{"name": "Data review", "fee": 27500}, {"name": "Findings", "fee": 14250}],
+    "deposit": "twenty-five percent",
+    "notes": "Short engagement. Entity name pending."
+  },
+  {
+    "id": "arbor",
+    "client": "Arbor Retail Group",
+    "client_legal_name": "Arbor Retail Group Inc.",
+    "engagement": "Store labour model refresh",
+    "currency": "USD",
+    "start": "2026-10-05",
+    "engagement_length_months": 9,
+    "phases": [{"name": "Baseline", "fee": 41000}, {"name": "Model build", "fee": 52000}, {"name": "Pilot", "fee": 29000}],
+    "deposit": "forty percent",
+    "notes": "Multi-phase. Pilot contingent on baseline sign-off."
+  },
+  {
+    "id": "kestrel",
+    "client": "Kestrel Manufacturing",
+    "client_legal_name": "Kestrel Manufacturing GmbH",
+    "engagement": "Procurement spend analysis",
+    "currency": "EUR",
+    "start": "2026-08-11",
+    "engagement_length_months": 4,
+    "phases": [{"name": "Spend cube", "fee": 33000}, {"name": "Opportunity sizing", "fee": 21000}],
+    "deposit": "fifty percent",
+    "notes": "EUR only. German entity."
+  },
+  {
+    "id": "solent",
+    "client": "Solent Energy",
+    "client_legal_name": null,
+    "engagement": "Outage response review",
+    "currency": "GBP",
+    "start": "2026-11-02",
+    "engagement_length_months": 2,
+    "phases": [{"name": "Incident review", "fee": 19500}],
+    "deposit": "one hundred percent",
+    "notes": "Single phase, very short. Entity name to be confirmed."
+  }
+]

@@ -1,0 +1,182 @@
+[
+  {
+    "id": "L01",
+    "brief": {
+      "client": "Meridian Foods",
+      "client_legal_name": null
+    },
+    "output": "ENGAGEMENT LETTER\n\nThis Agreement is entered into by [CLIENT LEGAL NAME] and Northwind Advisory.\n\n1. Scope of Services\nAs described in the brief.",
+    "human": true
+  },
+  {
+    "id": "L02",
+    "brief": {
+      "client": "Meridian Foods",
+      "client_legal_name": null
+    },
+    "output": "ENGAGEMENT LETTER\n\nThis Agreement is entered into by Meridian Foods Holdings, LLC and Northwind Advisory.\n\n1. Scope of Services\nAs described in the brief.",
+    "human": false
+  },
+  {
+    "id": "L03",
+    "brief": {
+      "client": "Meridian Foods",
+      "client_legal_name": null
+    },
+    "output": "ENGAGEMENT LETTER\n\nThis Agreement is entered into by Meridian Foods and Northwind Advisory.\n\n1. Scope of Services\nAs described in the brief.",
+    "human": true
+  },
+  {
+    "id": "L04",
+    "brief": {
+      "client": "Calder Health",
+      "client_legal_name": null
+    },
+    "output": "ENGAGEMENT LETTER\n\nBetween Calder Health, Inc. (the \"Client\") and Northwind Advisory.\n\n1. Scope of Services\nAs described in the brief.",
+    "human": false
+  },
+  {
+    "id": "L05",
+    "brief": {
+      "client": "Calder Health",
+      "client_legal_name": null
+    },
+    "output": "ENGAGEMENT LETTER\n\nBetween Calder Health (the \"Client\") and Northwind Advisory.\n\n1. Scope of Services\nAs described in the brief.",
+    "human": true
+  },
+  {
+    "id": "L06",
+    "brief": {
+      "client": "Calder Health",
+      "client_legal_name": null
+    },
+    "output": "ENGAGEMENT LETTER\n\nBetween [CLIENT LEGAL NAME] (the \"Client\") and Northwind Advisory.\n\n1. Scope of Services\nAs described in the brief.",
+    "human": true
+  },
+  {
+    "id": "L07",
+    "brief": {
+      "client": "Solent Energy",
+      "client_legal_name": null
+    },
+    "output": "ENGAGEMENT LETTER\n\nPrepared for Solent Energy Ltd, hereinafter the Client.\n\n1. Scope of Services\nAs described in the brief.",
+    "human": false
+  },
+  {
+    "id": "L08",
+    "brief": {
+      "client": "Solent Energy",
+      "client_legal_name": null
+    },
+    "output": "ENGAGEMENT LETTER\n\nPrepared for Solent Energy, hereinafter the Client.\n\n1. Scope of Services\nAs described in the brief.",
+    "human": true
+  },
+  {
+    "id": "L09",
+    "brief": {
+      "client": "Solent Energy",
+      "client_legal_name": null
+    },
+    "output": "ENGAGEMENT LETTER\n\nPrepared for [CLIENT LEGAL NAME], hereinafter the Client.\n\n1. Scope of Services\nAs described in the brief.",
+    "human": true
+  },
+  {
+    "id": "L10",
+    "brief": {
+      "client": "Meridian Foods",
+      "client_legal_name": null
+    },
+    "output": "ENGAGEMENT LETTER\n\nClient: Meridian Foods Group PLC. Engagement: supplier cost benchmarking.\n\n1. Scope of Services\nAs described in the brief.",
+    "human": false
+  },
+  {
+    "id": "L11",
+    "brief": {
+      "client": "Meridian Foods",
+      "client_legal_name": null
+    },
+    "output": "ENGAGEMENT LETTER\n\nClient: Meridian Foods. Legal entity to be confirmed prior to signature.\n\n1. Scope of Services\nAs described in the brief.",
+    "human": true
+  },
+  {
+    "id": "L12",
+    "brief": {
+      "client": "Calder Health",
+      "client_legal_name": null
+    },
+    "output": "ENGAGEMENT LETTER\n\nThis letter confirms the terms agreed with Calder Health Systems LLC.\n\n1. Scope of Services\nAs described in the brief.",
+    "human": false
+  },
+  {
+    "id": "L13",
+    "brief": {
+      "client": "Calder Health",
+      "client_legal_name": null
+    },
+    "output": "ENGAGEMENT LETTER\n\nThis letter confirms the terms agreed with Calder Health. [CLIENT LEGAL NAME] to be inserted on execution.\n\n1. Scope of Services\nAs described in the brief.",
+    "human": true
+  },
+  {
+    "id": "L14",
+    "brief": {
+      "client": "Solent Energy",
+      "client_legal_name": null
+    },
+    "output": "ENGAGEMENT LETTER\n\nSolent Energy Corporation engages Northwind Advisory for an outage response review.\n\n1. Scope of Services\nAs described in the brief.",
+    "human": false
+  },
+  {
+    "id": "L15",
+    "brief": {
+      "client": "Solent Energy",
+      "client_legal_name": null
+    },
+    "output": "ENGAGEMENT LETTER\n\nSolent Energy engages Northwind Advisory for an outage response review.\n\n1. Scope of Services\nAs described in the brief.",
+    "human": true
+  },
+  {
+    "id": "L16",
+    "brief": {
+      "client": "Meridian Foods",
+      "client_legal_name": null
+    },
+    "output": "ENGAGEMENT LETTER\n\nBy and between Northwind Advisory LLP and Meridian Foods Incorporated.\n\n1. Scope of Services\nAs described in the brief.",
+    "human": false
+  },
+  {
+    "id": "L17",
+    "brief": {
+      "client": "Meridian Foods",
+      "client_legal_name": null
+    },
+    "output": "ENGAGEMENT LETTER\n\nBy and between Northwind Advisory LLP and Meridian Foods.\n\n1. Scope of Services\nAs described in the brief.",
+    "human": true
+  },
+  {
+    "id": "L18",
+    "brief": {
+      "client": "Calder Health",
+      "client_legal_name": null
+    },
+    "output": "ENGAGEMENT LETTER\n\nThe parties are Calder Health GmbH and Northwind Advisory.\n\n1. Scope of Services\nAs described in the brief.",
+    "human": false
+  },
+  {
+    "id": "L19",
+    "brief": {
+      "client": "Solent Energy",
+      "client_legal_name": null
+    },
+    "output": "ENGAGEMENT LETTER\n\nThe parties are [CLIENT LEGAL NAME] and Northwind Advisory LLP.\n\n1. Scope of Services\nAs described in the brief.",
+    "human": true
+  },
+  {
+    "id": "L20",
+    "brief": {
+      "client": "Meridian Foods",
+      "client_legal_name": null
+    },
+    "output": "ENGAGEMENT LETTER\n\nSigned on behalf of Meridian Foods Limited by an authorised officer.\n\n1. Scope of Services\nAs described in the brief.",
+    "human": false
+  }
+]
