@@ -129,12 +129,12 @@ survives the full suite, and identical candidates tell us nothing.
 Use ONLY rule keys from the list above. Adding a rule that is already present is
 a no-op and wastes a candidate.
 
-Return ONLY JSON:
-{{"candidates": [
+Return ONLY a JSON array of exactly 3 objects, with no wrapper object:
+[
   {{"add": ["<rule key>"], "remove": [], "rationale": "<one line: why this would fix it>"}},
   {{"add": [], "remove": ["<rule key>"], "rationale": "<one line>"}},
   {{"add": ["<rule key>"], "remove": ["<rule key>"], "rationale": "<one line>"}}
-]}}"""
+]"""
 
 
 @dataclass
@@ -176,11 +176,16 @@ def propose(reg: Regression, n: int = 3) -> list[Candidate]:
         current="\n".join(f"  - {r}: {target.RULES[r]}" for r in current),
         available="\n".join(f"  - {k}: {v}" for k, v in target.RULES.items()),
     ))
-    if not isinstance(data, dict) or not isinstance(data.get("candidates"), list):
-        raise RuntimeError("loop: model returned no parseable candidate list")
+    # complete_json scans for '[' before '{', so a {"candidates": [...]} wrapper
+    # comes back as the bare inner array. Accept either rather than depending on
+    # which shape the model picked.
+    rows = data if isinstance(data, list) else (
+        data.get("candidates") if isinstance(data, dict) else None)
+    if not isinstance(rows, list) or not rows:
+        raise RuntimeError(f"loop: model returned no parseable candidate list (got {type(data).__name__})")
 
     out: list[Candidate] = []
-    for i, c in enumerate(data["candidates"][:n], 1):
+    for i, c in enumerate(rows[:n], 1):
         if not isinstance(c, dict):
             continue
         add = [r for r in c.get("add", []) if r in target.RULES]

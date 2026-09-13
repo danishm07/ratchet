@@ -28,6 +28,23 @@ from .config import CACHE, settings
 _LOCK = threading.Lock()
 _STATS = {"hits": 0, "misses": 0, "errors": 0}
 
+# One lock per cache key, so concurrent callers asking the identical question
+# wait for the first answer instead of each buying their own.
+#
+# Without this the pool stampedes a cold cache: six workers miss the same key at
+# the same instant, six real calls go out, and — because the model is not
+# deterministic — six *different* answers come back. One wins the write and the
+# other five are used anyway by the threads that made them. That was observed,
+# not theorised: the same rule ended up graded by a regex on one brief and by an
+# LLM rubric on another, inside a single run. A measuring instrument that varies
+# with thread scheduling is the rubber ruler CLAUDE.md is about.
+_KEY_LOCKS: dict[str, threading.Lock] = {}
+
+
+def _key_lock(key: str) -> threading.Lock:
+    with _LOCK:
+        return _KEY_LOCKS.setdefault(key, threading.Lock())
+
 
 def stats() -> dict[str, int]:
     with _LOCK:
@@ -81,20 +98,27 @@ def complete(prompt: str, *, model: str | None = None, backend: str | None = Non
     """One cached completion. Raises with context on failure — never returns junk."""
     backend = backend or settings.backend
     model = model or settings.model
-    path = CACHE / f"{_key(prompt, model, backend)}.txt"
+    key = _key(prompt, model, backend)
+    path = CACHE / f"{key}.txt"
 
     if path.exists():
         _bump("hits")
         return path.read_text()
 
-    _bump("misses")
-    try:
-        out = _call_cli(prompt) if backend == "cli" else _call_openrouter(prompt, model)
-    except Exception:
-        _bump("errors")
-        raise
-    path.write_text(out)
-    return out
+    with _key_lock(key):
+        # Someone else may have answered this exact question while we waited.
+        if path.exists():
+            _bump("hits")
+            return path.read_text()
+
+        _bump("misses")
+        try:
+            out = _call_cli(prompt) if backend == "cli" else _call_openrouter(prompt, model)
+        except Exception:
+            _bump("errors")
+            raise
+        path.write_text(out)
+        return out
 
 
 _FENCE = re.compile(r"^```(?:json)?|```$", re.M)
