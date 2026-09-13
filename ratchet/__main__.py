@@ -138,6 +138,12 @@ def cmd_seed(args) -> None:
     seed_main()
 
 
+def cmd_loop(args) -> None:
+    """Regression -> Linear issue -> branch -> verified fix -> draft PR a human merges."""
+    from . import loop
+    raise SystemExit(loop.run(dry=args.dry_run, n=args.n))
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(prog="ratchet")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -154,6 +160,14 @@ def main() -> None:
 
     v = sub.add_parser("validate"); v.set_defaults(fn=cmd_validate)
     s = sub.add_parser("seed"); s.set_defaults(fn=cmd_seed)
+
+    lp = sub.add_parser("loop",
+                        help="fix one regression autonomously, up to a draft PR")
+    lp.add_argument("--dry-run", action="store_true",
+                    help="exercise the whole path — including candidate generation and "
+                         "verification — but skip the three write calls")
+    lp.add_argument("-n", type=int, default=3, help="how many candidates to propose")
+    lp.set_defaults(fn=cmd_loop)
 
     cg = sub.add_parser("compare-graders",
                         help="generated graders vs the hand-written ones, per rule")

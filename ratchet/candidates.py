@@ -20,7 +20,7 @@ sys.path.insert(0, str(ROOT))
 from fixtures import target  # noqa: E402
 
 
-def _score(rules: list[str], cases: list[Case], briefs: list[dict], workers: int = 6) -> set[str]:
+def passing_set(rules: list[str], cases: list[Case], briefs: list[dict], workers: int = 6) -> set[str]:
     """Returns the set of case ids that pass under this rule set."""
     from .llm import complete
     by_id = {b["id"]: b for b in briefs}
@@ -47,12 +47,12 @@ def _score(rules: list[str], cases: list[Case], briefs: list[dict], workers: int
 def ablate(base_rules: list[str], candidates: dict[str, list[str]],
            cases: list[Case], briefs: list[dict]) -> dict:
     """base_rules plus each candidate's added rules, alone and in combination."""
-    base = _score(base_rules, cases, briefs)
+    base = passing_set(base_rules, cases, briefs)
     rows = []
     scores: dict[str, set[str]] = {}
 
     for name, add in candidates.items():
-        s = _score(sorted(set(base_rules) | set(add)), cases, briefs)
+        s = passing_set(sorted(set(base_rules) | set(add)), cases, briefs)
         scores[name] = s
         rows.append({
             "name": name,
@@ -64,7 +64,7 @@ def ablate(base_rules: list[str], candidates: dict[str, list[str]],
 
     for combo in itertools.combinations(candidates, 2):
         add = sorted(set().union(*[candidates[c] for c in combo]))
-        s = _score(sorted(set(base_rules) | set(add)), cases, briefs)
+        s = passing_set(sorted(set(base_rules) | set(add)), cases, briefs)
         predicted = len(set().union(*[scores[c] - base for c in combo])) - \
             len(set().union(*[base - scores[c] for c in combo]))
         actual = len(s) - len(base)
