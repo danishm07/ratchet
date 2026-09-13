@@ -512,7 +512,14 @@ cheap; neither is done.
 
 ## 6. Demo video
 
-**[Link to be added — ≤2 minutes]**
+**[▶ Watch the demo — 1:55](demo/ratchet-demo.mp4)** · [`demo/ratchet-demo.mp4`](demo/ratchet-demo.mp4)
+
+https://github.com/danishm07/ratchet/raw/main/demo/ratchet-demo.mp4
+
+The grid is the hero shot: one row per case, one column per version, outlined cells
+where a case passed in the previous version and fails in this one. Everything else
+in the run — the extraction counts, the judge agreement, the loop's verdict — is
+there to make those cells worth believing.
 
 ---
 
