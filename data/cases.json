@@ -7,10 +7,10 @@
     "brief_id": "meridian",
     "grader": "deterministic",
     "source_app": "slack",
-    "source_id": "1789336005.320849",
+    "source_id": "1755130003.003",
     "source_text": "no Assumptions section on the Calder letter. that's the second time, clients keep asking where it went",
-    "source_author": "ratchetapp",
-    "source_url": "slack://channel/C0C1DF48GA1/1789336005.320849",
+    "source_author": "ktran",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
       "derived_rule": "assumptions_section_present"
@@ -24,10 +24,10 @@
     "brief_id": "harbourline",
     "grader": "deterministic",
     "source_app": "slack",
-    "source_id": "1789336005.320849",
+    "source_id": "1755130003.003",
     "source_text": "no Assumptions section on the Calder letter. that's the second time, clients keep asking where it went",
-    "source_author": "ratchetapp",
-    "source_url": "slack://channel/C0C1DF48GA1/1789336005.320849",
+    "source_author": "ktran",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
       "derived_rule": "assumptions_section_present"
@@ -41,10 +41,10 @@
     "brief_id": "calder",
     "grader": "deterministic",
     "source_app": "slack",
-    "source_id": "1789336005.320849",
+    "source_id": "1755130003.003",
     "source_text": "no Assumptions section on the Calder letter. that's the second time, clients keep asking where it went",
-    "source_author": "ratchetapp",
-    "source_url": "slack://channel/C0C1DF48GA1/1789336005.320849",
+    "source_author": "ktran",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
       "derived_rule": "assumptions_section_present"
@@ -58,10 +58,10 @@
     "brief_id": "arbor",
     "grader": "deterministic",
     "source_app": "slack",
-    "source_id": "1789336005.320849",
+    "source_id": "1755130003.003",
     "source_text": "no Assumptions section on the Calder letter. that's the second time, clients keep asking where it went",
-    "source_author": "ratchetapp",
-    "source_url": "slack://channel/C0C1DF48GA1/1789336005.320849",
+    "source_author": "ktran",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
       "derived_rule": "assumptions_section_present"
@@ -75,10 +75,10 @@
     "brief_id": "kestrel",
     "grader": "deterministic",
     "source_app": "slack",
-    "source_id": "1789336005.320849",
+    "source_id": "1755130003.003",
     "source_text": "no Assumptions section on the Calder letter. that's the second time, clients keep asking where it went",
-    "source_author": "ratchetapp",
-    "source_url": "slack://channel/C0C1DF48GA1/1789336005.320849",
+    "source_author": "ktran",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
       "derived_rule": "assumptions_section_present"
@@ -92,10 +92,10 @@
     "brief_id": "solent",
     "grader": "deterministic",
     "source_app": "slack",
-    "source_id": "1789336005.320849",
+    "source_id": "1755130003.003",
     "source_text": "no Assumptions section on the Calder letter. that's the second time, clients keep asking where it went",
-    "source_author": "ratchetapp",
-    "source_url": "slack://channel/C0C1DF48GA1/1789336005.320849",
+    "source_author": "ktran",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
       "derived_rule": "assumptions_section_present"
@@ -109,13 +109,13 @@
     "brief_id": "meridian",
     "grader": "deterministic",
     "source_app": "github",
-    "source_id": "c83618876",
+    "source_id": "3b70e1a",
     "source_text": "fix: force currency symbol from engagement metadata instead of inferring per line\n\nMixed symbols were appearing in a single fee table when the brief currency was not USD.",
-    "source_author": "Danish",
-    "source_url": "https://github.com/danishm07/ratchet/commit/c83618876b356e67bc5a7d0964da1bec6e176e01",
+    "source_author": "danishm07",
+    "source_url": "",
     "derived_from_fix": true,
     "meta": {
-      "derived_rule": "consistent_currency_symbol"
+      "derived_rule": "currency_symbol_consistency"
     }
   },
   {
@@ -126,13 +126,13 @@
     "brief_id": "harbourline",
     "grader": "deterministic",
     "source_app": "github",
-    "source_id": "c83618876",
+    "source_id": "3b70e1a",
     "source_text": "fix: force currency symbol from engagement metadata instead of inferring per line\n\nMixed symbols were appearing in a single fee table when the brief currency was not USD.",
-    "source_author": "Danish",
-    "source_url": "https://github.com/danishm07/ratchet/commit/c83618876b356e67bc5a7d0964da1bec6e176e01",
+    "source_author": "danishm07",
+    "source_url": "",
     "derived_from_fix": true,
     "meta": {
-      "derived_rule": "consistent_currency_symbol"
+      "derived_rule": "currency_symbol_consistency"
     }
   },
   {
@@ -143,13 +143,13 @@
     "brief_id": "calder",
     "grader": "deterministic",
     "source_app": "github",
-    "source_id": "c83618876",
+    "source_id": "3b70e1a",
     "source_text": "fix: force currency symbol from engagement metadata instead of inferring per line\n\nMixed symbols were appearing in a single fee table when the brief currency was not USD.",
-    "source_author": "Danish",
-    "source_url": "https://github.com/danishm07/ratchet/commit/c83618876b356e67bc5a7d0964da1bec6e176e01",
+    "source_author": "danishm07",
+    "source_url": "",
     "derived_from_fix": true,
     "meta": {
-      "derived_rule": "consistent_currency_symbol"
+      "derived_rule": "currency_symbol_consistency"
     }
   },
   {
@@ -160,13 +160,13 @@
     "brief_id": "arbor",
     "grader": "deterministic",
     "source_app": "github",
-    "source_id": "c83618876",
+    "source_id": "3b70e1a",
     "source_text": "fix: force currency symbol from engagement metadata instead of inferring per line\n\nMixed symbols were appearing in a single fee table when the brief currency was not USD.",
-    "source_author": "Danish",
-    "source_url": "https://github.com/danishm07/ratchet/commit/c83618876b356e67bc5a7d0964da1bec6e176e01",
+    "source_author": "danishm07",
+    "source_url": "",
     "derived_from_fix": true,
     "meta": {
-      "derived_rule": "consistent_currency_symbol"
+      "derived_rule": "currency_symbol_consistency"
     }
   },
   {
@@ -177,13 +177,13 @@
     "brief_id": "kestrel",
     "grader": "deterministic",
     "source_app": "github",
-    "source_id": "c83618876",
+    "source_id": "3b70e1a",
     "source_text": "fix: force currency symbol from engagement metadata instead of inferring per line\n\nMixed symbols were appearing in a single fee table when the brief currency was not USD.",
-    "source_author": "Danish",
-    "source_url": "https://github.com/danishm07/ratchet/commit/c83618876b356e67bc5a7d0964da1bec6e176e01",
+    "source_author": "danishm07",
+    "source_url": "",
     "derived_from_fix": true,
     "meta": {
-      "derived_rule": "consistent_currency_symbol"
+      "derived_rule": "currency_symbol_consistency"
     }
   },
   {
@@ -194,13 +194,13 @@
     "brief_id": "solent",
     "grader": "deterministic",
     "source_app": "github",
-    "source_id": "c83618876",
+    "source_id": "3b70e1a",
     "source_text": "fix: force currency symbol from engagement metadata instead of inferring per line\n\nMixed symbols were appearing in a single fee table when the brief currency was not USD.",
-    "source_author": "Danish",
-    "source_url": "https://github.com/danishm07/ratchet/commit/c83618876b356e67bc5a7d0964da1bec6e176e01",
+    "source_author": "danishm07",
+    "source_url": "",
     "derived_from_fix": true,
     "meta": {
-      "derived_rule": "consistent_currency_symbol"
+      "derived_rule": "currency_symbol_consistency"
     }
   },
   {
@@ -210,13 +210,15 @@
     "expectation": "every date is written in the form '14 June 2026', with no abbreviated or misspelled month",
     "brief_id": "meridian",
     "grader": "deterministic",
-    "source_app": "reference",
-    "source_id": "date",
-    "source_text": "every date is written in the form '14 June 2026', with no abbreviated or misspelled month",
-    "source_author": "",
+    "source_app": "slack",
+    "source_id": "1755130001.001",
+    "source_text": "the Meridian letter has the wrong date in section 3 again - says \"Jume 14\". third month typo I've seen this week",
+    "source_author": "mreyes",
     "source_url": "",
     "derived_from_fix": false,
-    "meta": {}
+    "meta": {
+      "derived_rule": "month_name_spelling"
+    }
   },
   {
     "id": "date::harbourline",
@@ -225,13 +227,15 @@
     "expectation": "every date is written in the form '14 June 2026', with no abbreviated or misspelled month",
     "brief_id": "harbourline",
     "grader": "deterministic",
-    "source_app": "reference",
-    "source_id": "date",
-    "source_text": "every date is written in the form '14 June 2026', with no abbreviated or misspelled month",
-    "source_author": "",
+    "source_app": "slack",
+    "source_id": "1755130001.001",
+    "source_text": "the Meridian letter has the wrong date in section 3 again - says \"Jume 14\". third month typo I've seen this week",
+    "source_author": "mreyes",
     "source_url": "",
     "derived_from_fix": false,
-    "meta": {}
+    "meta": {
+      "derived_rule": "month_name_spelling"
+    }
   },
   {
     "id": "date::calder",
@@ -240,13 +244,15 @@
     "expectation": "every date is written in the form '14 June 2026', with no abbreviated or misspelled month",
     "brief_id": "calder",
     "grader": "deterministic",
-    "source_app": "reference",
-    "source_id": "date",
-    "source_text": "every date is written in the form '14 June 2026', with no abbreviated or misspelled month",
-    "source_author": "",
+    "source_app": "slack",
+    "source_id": "1755130001.001",
+    "source_text": "the Meridian letter has the wrong date in section 3 again - says \"Jume 14\". third month typo I've seen this week",
+    "source_author": "mreyes",
     "source_url": "",
     "derived_from_fix": false,
-    "meta": {}
+    "meta": {
+      "derived_rule": "month_name_spelling"
+    }
   },
   {
     "id": "date::arbor",
@@ -255,13 +261,15 @@
     "expectation": "every date is written in the form '14 June 2026', with no abbreviated or misspelled month",
     "brief_id": "arbor",
     "grader": "deterministic",
-    "source_app": "reference",
-    "source_id": "date",
-    "source_text": "every date is written in the form '14 June 2026', with no abbreviated or misspelled month",
-    "source_author": "",
+    "source_app": "slack",
+    "source_id": "1755130001.001",
+    "source_text": "the Meridian letter has the wrong date in section 3 again - says \"Jume 14\". third month typo I've seen this week",
+    "source_author": "mreyes",
     "source_url": "",
     "derived_from_fix": false,
-    "meta": {}
+    "meta": {
+      "derived_rule": "month_name_spelling"
+    }
   },
   {
     "id": "date::kestrel",
@@ -270,13 +278,15 @@
     "expectation": "every date is written in the form '14 June 2026', with no abbreviated or misspelled month",
     "brief_id": "kestrel",
     "grader": "deterministic",
-    "source_app": "reference",
-    "source_id": "date",
-    "source_text": "every date is written in the form '14 June 2026', with no abbreviated or misspelled month",
-    "source_author": "",
+    "source_app": "slack",
+    "source_id": "1755130001.001",
+    "source_text": "the Meridian letter has the wrong date in section 3 again - says \"Jume 14\". third month typo I've seen this week",
+    "source_author": "mreyes",
     "source_url": "",
     "derived_from_fix": false,
-    "meta": {}
+    "meta": {
+      "derived_rule": "month_name_spelling"
+    }
   },
   {
     "id": "date::solent",
@@ -285,13 +295,15 @@
     "expectation": "every date is written in the form '14 June 2026', with no abbreviated or misspelled month",
     "brief_id": "solent",
     "grader": "deterministic",
-    "source_app": "reference",
-    "source_id": "date",
-    "source_text": "every date is written in the form '14 June 2026', with no abbreviated or misspelled month",
-    "source_author": "",
+    "source_app": "slack",
+    "source_id": "1755130001.001",
+    "source_text": "the Meridian letter has the wrong date in section 3 again - says \"Jume 14\". third month typo I've seen this week",
+    "source_author": "mreyes",
     "source_url": "",
     "derived_from_fix": false,
-    "meta": {}
+    "meta": {
+      "derived_rule": "month_name_spelling"
+    }
   },
   {
     "id": "daterange::meridian",
@@ -301,13 +313,13 @@
     "brief_id": "meridian",
     "grader": "deterministic",
     "source_app": "linear",
-    "source_id": "RAT-10",
+    "source_id": "ENG-431",
     "source_text": "End date before start date on short engagements\n\nSolent letter: start 2 November 2026, end 14 August 2026. Two-month engagement, dates inverted.",
-    "source_author": "Danish Mohammed",
-    "source_url": "https://linear.app/ratchett/issue/RAT-10/end-date-before-start-date-on-short-engagements",
+    "source_author": "mreyes",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
-      "derived_rule": "engagement_date_ordering"
+      "derived_rule": "engagement_date_order"
     }
   },
   {
@@ -318,13 +330,13 @@
     "brief_id": "harbourline",
     "grader": "deterministic",
     "source_app": "linear",
-    "source_id": "RAT-10",
+    "source_id": "ENG-431",
     "source_text": "End date before start date on short engagements\n\nSolent letter: start 2 November 2026, end 14 August 2026. Two-month engagement, dates inverted.",
-    "source_author": "Danish Mohammed",
-    "source_url": "https://linear.app/ratchett/issue/RAT-10/end-date-before-start-date-on-short-engagements",
+    "source_author": "mreyes",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
-      "derived_rule": "engagement_date_ordering"
+      "derived_rule": "engagement_date_order"
     }
   },
   {
@@ -335,13 +347,13 @@
     "brief_id": "calder",
     "grader": "deterministic",
     "source_app": "linear",
-    "source_id": "RAT-10",
+    "source_id": "ENG-431",
     "source_text": "End date before start date on short engagements\n\nSolent letter: start 2 November 2026, end 14 August 2026. Two-month engagement, dates inverted.",
-    "source_author": "Danish Mohammed",
-    "source_url": "https://linear.app/ratchett/issue/RAT-10/end-date-before-start-date-on-short-engagements",
+    "source_author": "mreyes",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
-      "derived_rule": "engagement_date_ordering"
+      "derived_rule": "engagement_date_order"
     }
   },
   {
@@ -352,13 +364,13 @@
     "brief_id": "arbor",
     "grader": "deterministic",
     "source_app": "linear",
-    "source_id": "RAT-10",
+    "source_id": "ENG-431",
     "source_text": "End date before start date on short engagements\n\nSolent letter: start 2 November 2026, end 14 August 2026. Two-month engagement, dates inverted.",
-    "source_author": "Danish Mohammed",
-    "source_url": "https://linear.app/ratchett/issue/RAT-10/end-date-before-start-date-on-short-engagements",
+    "source_author": "mreyes",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
-      "derived_rule": "engagement_date_ordering"
+      "derived_rule": "engagement_date_order"
     }
   },
   {
@@ -369,13 +381,13 @@
     "brief_id": "kestrel",
     "grader": "deterministic",
     "source_app": "linear",
-    "source_id": "RAT-10",
+    "source_id": "ENG-431",
     "source_text": "End date before start date on short engagements\n\nSolent letter: start 2 November 2026, end 14 August 2026. Two-month engagement, dates inverted.",
-    "source_author": "Danish Mohammed",
-    "source_url": "https://linear.app/ratchett/issue/RAT-10/end-date-before-start-date-on-short-engagements",
+    "source_author": "mreyes",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
-      "derived_rule": "engagement_date_ordering"
+      "derived_rule": "engagement_date_order"
     }
   },
   {
@@ -386,13 +398,13 @@
     "brief_id": "solent",
     "grader": "deterministic",
     "source_app": "linear",
-    "source_id": "RAT-10",
+    "source_id": "ENG-431",
     "source_text": "End date before start date on short engagements\n\nSolent letter: start 2 November 2026, end 14 August 2026. Two-month engagement, dates inverted.",
-    "source_author": "Danish Mohammed",
-    "source_url": "https://linear.app/ratchett/issue/RAT-10/end-date-before-start-date-on-short-engagements",
+    "source_author": "mreyes",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
-      "derived_rule": "engagement_date_ordering"
+      "derived_rule": "engagement_date_order"
     }
   },
   {
@@ -403,10 +415,10 @@
     "brief_id": "meridian",
     "grader": "deterministic",
     "source_app": "slack",
-    "source_id": "1789336005.501089",
+    "source_id": "1755130004.004",
     "source_text": "exclusions missing entirely on Solent, client assumed the rebuild was in scope. that was an awkward call",
-    "source_author": "ratchetapp",
-    "source_url": "slack://channel/C0C1DF48GA1/1789336005.501089",
+    "source_author": "mreyes",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
       "derived_rule": "exclusions_section_present"
@@ -420,10 +432,10 @@
     "brief_id": "harbourline",
     "grader": "deterministic",
     "source_app": "slack",
-    "source_id": "1789336005.501089",
+    "source_id": "1755130004.004",
     "source_text": "exclusions missing entirely on Solent, client assumed the rebuild was in scope. that was an awkward call",
-    "source_author": "ratchetapp",
-    "source_url": "slack://channel/C0C1DF48GA1/1789336005.501089",
+    "source_author": "mreyes",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
       "derived_rule": "exclusions_section_present"
@@ -437,10 +449,10 @@
     "brief_id": "calder",
     "grader": "deterministic",
     "source_app": "slack",
-    "source_id": "1789336005.501089",
+    "source_id": "1755130004.004",
     "source_text": "exclusions missing entirely on Solent, client assumed the rebuild was in scope. that was an awkward call",
-    "source_author": "ratchetapp",
-    "source_url": "slack://channel/C0C1DF48GA1/1789336005.501089",
+    "source_author": "mreyes",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
       "derived_rule": "exclusions_section_present"
@@ -454,10 +466,10 @@
     "brief_id": "arbor",
     "grader": "deterministic",
     "source_app": "slack",
-    "source_id": "1789336005.501089",
+    "source_id": "1755130004.004",
     "source_text": "exclusions missing entirely on Solent, client assumed the rebuild was in scope. that was an awkward call",
-    "source_author": "ratchetapp",
-    "source_url": "slack://channel/C0C1DF48GA1/1789336005.501089",
+    "source_author": "mreyes",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
       "derived_rule": "exclusions_section_present"
@@ -471,10 +483,10 @@
     "brief_id": "kestrel",
     "grader": "deterministic",
     "source_app": "slack",
-    "source_id": "1789336005.501089",
+    "source_id": "1755130004.004",
     "source_text": "exclusions missing entirely on Solent, client assumed the rebuild was in scope. that was an awkward call",
-    "source_author": "ratchetapp",
-    "source_url": "slack://channel/C0C1DF48GA1/1789336005.501089",
+    "source_author": "mreyes",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
       "derived_rule": "exclusions_section_present"
@@ -488,10 +500,10 @@
     "brief_id": "solent",
     "grader": "deterministic",
     "source_app": "slack",
-    "source_id": "1789336005.501089",
+    "source_id": "1755130004.004",
     "source_text": "exclusions missing entirely on Solent, client assumed the rebuild was in scope. that was an awkward call",
-    "source_author": "ratchetapp",
-    "source_url": "slack://channel/C0C1DF48GA1/1789336005.501089",
+    "source_author": "mreyes",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
       "derived_rule": "exclusions_section_present"
@@ -505,10 +517,10 @@
     "brief_id": "meridian",
     "grader": "deterministic",
     "source_app": "github",
-    "source_id": "d8aae1541",
+    "source_id": "c904f22",
     "source_text": "fix: restore numbered heading hierarchy lost in the template restructure\n\nHeadings were rendering unnumbered after the section rewrite.",
-    "source_author": "Danish",
-    "source_url": "https://github.com/danishm07/ratchet/commit/d8aae154116c92148cb30c94431218dc33b79fdb",
+    "source_author": "danishm07",
+    "source_url": "",
     "derived_from_fix": true,
     "meta": {
       "derived_rule": "numbered_heading_hierarchy"
@@ -522,10 +534,10 @@
     "brief_id": "harbourline",
     "grader": "deterministic",
     "source_app": "github",
-    "source_id": "d8aae1541",
+    "source_id": "c904f22",
     "source_text": "fix: restore numbered heading hierarchy lost in the template restructure\n\nHeadings were rendering unnumbered after the section rewrite.",
-    "source_author": "Danish",
-    "source_url": "https://github.com/danishm07/ratchet/commit/d8aae154116c92148cb30c94431218dc33b79fdb",
+    "source_author": "danishm07",
+    "source_url": "",
     "derived_from_fix": true,
     "meta": {
       "derived_rule": "numbered_heading_hierarchy"
@@ -539,10 +551,10 @@
     "brief_id": "calder",
     "grader": "deterministic",
     "source_app": "github",
-    "source_id": "d8aae1541",
+    "source_id": "c904f22",
     "source_text": "fix: restore numbered heading hierarchy lost in the template restructure\n\nHeadings were rendering unnumbered after the section rewrite.",
-    "source_author": "Danish",
-    "source_url": "https://github.com/danishm07/ratchet/commit/d8aae154116c92148cb30c94431218dc33b79fdb",
+    "source_author": "danishm07",
+    "source_url": "",
     "derived_from_fix": true,
     "meta": {
       "derived_rule": "numbered_heading_hierarchy"
@@ -556,10 +568,10 @@
     "brief_id": "arbor",
     "grader": "deterministic",
     "source_app": "github",
-    "source_id": "d8aae1541",
+    "source_id": "c904f22",
     "source_text": "fix: restore numbered heading hierarchy lost in the template restructure\n\nHeadings were rendering unnumbered after the section rewrite.",
-    "source_author": "Danish",
-    "source_url": "https://github.com/danishm07/ratchet/commit/d8aae154116c92148cb30c94431218dc33b79fdb",
+    "source_author": "danishm07",
+    "source_url": "",
     "derived_from_fix": true,
     "meta": {
       "derived_rule": "numbered_heading_hierarchy"
@@ -573,10 +585,10 @@
     "brief_id": "kestrel",
     "grader": "deterministic",
     "source_app": "github",
-    "source_id": "d8aae1541",
+    "source_id": "c904f22",
     "source_text": "fix: restore numbered heading hierarchy lost in the template restructure\n\nHeadings were rendering unnumbered after the section rewrite.",
-    "source_author": "Danish",
-    "source_url": "https://github.com/danishm07/ratchet/commit/d8aae154116c92148cb30c94431218dc33b79fdb",
+    "source_author": "danishm07",
+    "source_url": "",
     "derived_from_fix": true,
     "meta": {
       "derived_rule": "numbered_heading_hierarchy"
@@ -590,10 +602,10 @@
     "brief_id": "solent",
     "grader": "deterministic",
     "source_app": "github",
-    "source_id": "d8aae1541",
+    "source_id": "c904f22",
     "source_text": "fix: restore numbered heading hierarchy lost in the template restructure\n\nHeadings were rendering unnumbered after the section rewrite.",
-    "source_author": "Danish",
-    "source_url": "https://github.com/danishm07/ratchet/commit/d8aae154116c92148cb30c94431218dc33b79fdb",
+    "source_author": "danishm07",
+    "source_url": "",
     "derived_from_fix": true,
     "meta": {
       "derived_rule": "numbered_heading_hierarchy"
@@ -606,13 +618,15 @@
     "expectation": "when the brief supplies no client legal entity name, a placeholder is left rather than a legal name being invented",
     "brief_id": "meridian",
     "grader": "llm",
-    "source_app": "reference",
-    "source_id": "legalname",
-    "source_text": "when the brief supplies no client legal entity name, a placeholder is left rather than a legal name being invented",
-    "source_author": "",
+    "source_app": "github",
+    "source_id": "884120",
+    "source_text": "we shouldn't be inventing a client legal entity when the brief doesn't supply one. leave the placeholder and let the engagement lead fill it in - last draft said \"Holdings, LLC\" out of nowhere",
+    "source_author": "svaidya",
     "source_url": "",
-    "derived_from_fix": false,
-    "meta": {}
+    "derived_from_fix": true,
+    "meta": {
+      "derived_rule": "client_entity_placeholder_preserved"
+    }
   },
   {
     "id": "legalname::harbourline",
@@ -621,13 +635,15 @@
     "expectation": "when the brief supplies no client legal entity name, a placeholder is left rather than a legal name being invented",
     "brief_id": "harbourline",
     "grader": "llm",
-    "source_app": "reference",
-    "source_id": "legalname",
-    "source_text": "when the brief supplies no client legal entity name, a placeholder is left rather than a legal name being invented",
-    "source_author": "",
+    "source_app": "github",
+    "source_id": "884120",
+    "source_text": "we shouldn't be inventing a client legal entity when the brief doesn't supply one. leave the placeholder and let the engagement lead fill it in - last draft said \"Holdings, LLC\" out of nowhere",
+    "source_author": "svaidya",
     "source_url": "",
-    "derived_from_fix": false,
-    "meta": {}
+    "derived_from_fix": true,
+    "meta": {
+      "derived_rule": "client_entity_placeholder_preserved"
+    }
   },
   {
     "id": "legalname::calder",
@@ -636,13 +652,15 @@
     "expectation": "when the brief supplies no client legal entity name, a placeholder is left rather than a legal name being invented",
     "brief_id": "calder",
     "grader": "llm",
-    "source_app": "reference",
-    "source_id": "legalname",
-    "source_text": "when the brief supplies no client legal entity name, a placeholder is left rather than a legal name being invented",
-    "source_author": "",
+    "source_app": "github",
+    "source_id": "884120",
+    "source_text": "we shouldn't be inventing a client legal entity when the brief doesn't supply one. leave the placeholder and let the engagement lead fill it in - last draft said \"Holdings, LLC\" out of nowhere",
+    "source_author": "svaidya",
     "source_url": "",
-    "derived_from_fix": false,
-    "meta": {}
+    "derived_from_fix": true,
+    "meta": {
+      "derived_rule": "client_entity_placeholder_preserved"
+    }
   },
   {
     "id": "legalname::arbor",
@@ -651,13 +669,15 @@
     "expectation": "when the brief supplies no client legal entity name, a placeholder is left rather than a legal name being invented",
     "brief_id": "arbor",
     "grader": "llm",
-    "source_app": "reference",
-    "source_id": "legalname",
-    "source_text": "when the brief supplies no client legal entity name, a placeholder is left rather than a legal name being invented",
-    "source_author": "",
+    "source_app": "github",
+    "source_id": "884120",
+    "source_text": "we shouldn't be inventing a client legal entity when the brief doesn't supply one. leave the placeholder and let the engagement lead fill it in - last draft said \"Holdings, LLC\" out of nowhere",
+    "source_author": "svaidya",
     "source_url": "",
-    "derived_from_fix": false,
-    "meta": {}
+    "derived_from_fix": true,
+    "meta": {
+      "derived_rule": "client_entity_placeholder_preserved"
+    }
   },
   {
     "id": "legalname::kestrel",
@@ -666,13 +686,15 @@
     "expectation": "when the brief supplies no client legal entity name, a placeholder is left rather than a legal name being invented",
     "brief_id": "kestrel",
     "grader": "llm",
-    "source_app": "reference",
-    "source_id": "legalname",
-    "source_text": "when the brief supplies no client legal entity name, a placeholder is left rather than a legal name being invented",
-    "source_author": "",
+    "source_app": "github",
+    "source_id": "884120",
+    "source_text": "we shouldn't be inventing a client legal entity when the brief doesn't supply one. leave the placeholder and let the engagement lead fill it in - last draft said \"Holdings, LLC\" out of nowhere",
+    "source_author": "svaidya",
     "source_url": "",
-    "derived_from_fix": false,
-    "meta": {}
+    "derived_from_fix": true,
+    "meta": {
+      "derived_rule": "client_entity_placeholder_preserved"
+    }
   },
   {
     "id": "legalname::solent",
@@ -681,13 +703,15 @@
     "expectation": "when the brief supplies no client legal entity name, a placeholder is left rather than a legal name being invented",
     "brief_id": "solent",
     "grader": "llm",
-    "source_app": "reference",
-    "source_id": "legalname",
-    "source_text": "when the brief supplies no client legal entity name, a placeholder is left rather than a legal name being invented",
-    "source_author": "",
+    "source_app": "github",
+    "source_id": "884120",
+    "source_text": "we shouldn't be inventing a client legal entity when the brief doesn't supply one. leave the placeholder and let the engagement lead fill it in - last draft said \"Holdings, LLC\" out of nowhere",
+    "source_author": "svaidya",
     "source_url": "",
-    "derived_from_fix": false,
-    "meta": {}
+    "derived_from_fix": true,
+    "meta": {
+      "derived_rule": "client_entity_placeholder_preserved"
+    }
   },
   {
     "id": "percent::meridian",
@@ -697,13 +721,13 @@
     "brief_id": "meridian",
     "grader": "deterministic",
     "source_app": "slack",
-    "source_id": "1789336005.162339",
+    "source_id": "1755130002.002",
     "source_text": "lol this one literally says \"fifty percent (20%)\" in the deposit clause. words and number don't match",
-    "source_author": "ratchetapp",
-    "source_url": "slack://channel/C0C1DF48GA1/1789336005.162339",
+    "source_author": "danish",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
-      "derived_rule": "numeral_word_agreement"
+      "derived_rule": "numeric_word_agreement"
     }
   },
   {
@@ -714,13 +738,13 @@
     "brief_id": "harbourline",
     "grader": "deterministic",
     "source_app": "slack",
-    "source_id": "1789336005.162339",
+    "source_id": "1755130002.002",
     "source_text": "lol this one literally says \"fifty percent (20%)\" in the deposit clause. words and number don't match",
-    "source_author": "ratchetapp",
-    "source_url": "slack://channel/C0C1DF48GA1/1789336005.162339",
+    "source_author": "danish",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
-      "derived_rule": "numeral_word_agreement"
+      "derived_rule": "numeric_word_agreement"
     }
   },
   {
@@ -731,13 +755,13 @@
     "brief_id": "calder",
     "grader": "deterministic",
     "source_app": "slack",
-    "source_id": "1789336005.162339",
+    "source_id": "1755130002.002",
     "source_text": "lol this one literally says \"fifty percent (20%)\" in the deposit clause. words and number don't match",
-    "source_author": "ratchetapp",
-    "source_url": "slack://channel/C0C1DF48GA1/1789336005.162339",
+    "source_author": "danish",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
-      "derived_rule": "numeral_word_agreement"
+      "derived_rule": "numeric_word_agreement"
     }
   },
   {
@@ -748,13 +772,13 @@
     "brief_id": "arbor",
     "grader": "deterministic",
     "source_app": "slack",
-    "source_id": "1789336005.162339",
+    "source_id": "1755130002.002",
     "source_text": "lol this one literally says \"fifty percent (20%)\" in the deposit clause. words and number don't match",
-    "source_author": "ratchetapp",
-    "source_url": "slack://channel/C0C1DF48GA1/1789336005.162339",
+    "source_author": "danish",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
-      "derived_rule": "numeral_word_agreement"
+      "derived_rule": "numeric_word_agreement"
     }
   },
   {
@@ -765,13 +789,13 @@
     "brief_id": "kestrel",
     "grader": "deterministic",
     "source_app": "slack",
-    "source_id": "1789336005.162339",
+    "source_id": "1755130002.002",
     "source_text": "lol this one literally says \"fifty percent (20%)\" in the deposit clause. words and number don't match",
-    "source_author": "ratchetapp",
-    "source_url": "slack://channel/C0C1DF48GA1/1789336005.162339",
+    "source_author": "danish",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
-      "derived_rule": "numeral_word_agreement"
+      "derived_rule": "numeric_word_agreement"
     }
   },
   {
@@ -782,13 +806,13 @@
     "brief_id": "solent",
     "grader": "deterministic",
     "source_app": "slack",
-    "source_id": "1789336005.162339",
+    "source_id": "1755130002.002",
     "source_text": "lol this one literally says \"fifty percent (20%)\" in the deposit clause. words and number don't match",
-    "source_author": "ratchetapp",
-    "source_url": "slack://channel/C0C1DF48GA1/1789336005.162339",
+    "source_author": "danish",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
-      "derived_rule": "numeral_word_agreement"
+      "derived_rule": "numeric_word_agreement"
     }
   },
   {
@@ -799,10 +823,10 @@
     "brief_id": "meridian",
     "grader": "deterministic",
     "source_app": "linear",
-    "source_id": "RAT-11",
+    "source_id": "ENG-460",
     "source_text": "Term length in body contradicts the quoted engagement length\n\nArbor is quoted as a 9-month engagement but the body says six (6) months.",
-    "source_author": "Danish Mohammed",
-    "source_url": "https://linear.app/ratchett/issue/RAT-11/term-length-in-body-contradicts-the-quoted-engagement-length",
+    "source_author": "jpark",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
       "derived_rule": "term_length_consistency"
@@ -816,10 +840,10 @@
     "brief_id": "harbourline",
     "grader": "deterministic",
     "source_app": "linear",
-    "source_id": "RAT-11",
+    "source_id": "ENG-460",
     "source_text": "Term length in body contradicts the quoted engagement length\n\nArbor is quoted as a 9-month engagement but the body says six (6) months.",
-    "source_author": "Danish Mohammed",
-    "source_url": "https://linear.app/ratchett/issue/RAT-11/term-length-in-body-contradicts-the-quoted-engagement-length",
+    "source_author": "jpark",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
       "derived_rule": "term_length_consistency"
@@ -833,10 +857,10 @@
     "brief_id": "calder",
     "grader": "deterministic",
     "source_app": "linear",
-    "source_id": "RAT-11",
+    "source_id": "ENG-460",
     "source_text": "Term length in body contradicts the quoted engagement length\n\nArbor is quoted as a 9-month engagement but the body says six (6) months.",
-    "source_author": "Danish Mohammed",
-    "source_url": "https://linear.app/ratchett/issue/RAT-11/term-length-in-body-contradicts-the-quoted-engagement-length",
+    "source_author": "jpark",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
       "derived_rule": "term_length_consistency"
@@ -850,10 +874,10 @@
     "brief_id": "arbor",
     "grader": "deterministic",
     "source_app": "linear",
-    "source_id": "RAT-11",
+    "source_id": "ENG-460",
     "source_text": "Term length in body contradicts the quoted engagement length\n\nArbor is quoted as a 9-month engagement but the body says six (6) months.",
-    "source_author": "Danish Mohammed",
-    "source_url": "https://linear.app/ratchett/issue/RAT-11/term-length-in-body-contradicts-the-quoted-engagement-length",
+    "source_author": "jpark",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
       "derived_rule": "term_length_consistency"
@@ -867,10 +891,10 @@
     "brief_id": "kestrel",
     "grader": "deterministic",
     "source_app": "linear",
-    "source_id": "RAT-11",
+    "source_id": "ENG-460",
     "source_text": "Term length in body contradicts the quoted engagement length\n\nArbor is quoted as a 9-month engagement but the body says six (6) months.",
-    "source_author": "Danish Mohammed",
-    "source_url": "https://linear.app/ratchett/issue/RAT-11/term-length-in-body-contradicts-the-quoted-engagement-length",
+    "source_author": "jpark",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
       "derived_rule": "term_length_consistency"
@@ -884,10 +908,10 @@
     "brief_id": "solent",
     "grader": "deterministic",
     "source_app": "linear",
-    "source_id": "RAT-11",
+    "source_id": "ENG-460",
     "source_text": "Term length in body contradicts the quoted engagement length\n\nArbor is quoted as a 9-month engagement but the body says six (6) months.",
-    "source_author": "Danish Mohammed",
-    "source_url": "https://linear.app/ratchett/issue/RAT-11/term-length-in-body-contradicts-the-quoted-engagement-length",
+    "source_author": "jpark",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
       "derived_rule": "term_length_consistency"
@@ -901,10 +925,10 @@
     "brief_id": "meridian",
     "grader": "deterministic",
     "source_app": "linear",
-    "source_id": "RAT-9",
+    "source_id": "ENG-412",
     "source_text": "Fee table totals don't add up on multi-phase engagements\n\nRepro: Meridian brief, two phases at 48,000 and 36,000. Generated total renders as 92,000. Should be 84,000. Happens on any brief with more than one phase.",
-    "source_author": "Danish Mohammed",
-    "source_url": "https://linear.app/ratchett/issue/RAT-9/fee-table-totals-dont-add-up-on-multi-phase-engagements",
+    "source_author": "ktran",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
       "derived_rule": "fee_total_arithmetic"
@@ -918,10 +942,10 @@
     "brief_id": "harbourline",
     "grader": "deterministic",
     "source_app": "linear",
-    "source_id": "RAT-9",
+    "source_id": "ENG-412",
     "source_text": "Fee table totals don't add up on multi-phase engagements\n\nRepro: Meridian brief, two phases at 48,000 and 36,000. Generated total renders as 92,000. Should be 84,000. Happens on any brief with more than one phase.",
-    "source_author": "Danish Mohammed",
-    "source_url": "https://linear.app/ratchett/issue/RAT-9/fee-table-totals-dont-add-up-on-multi-phase-engagements",
+    "source_author": "ktran",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
       "derived_rule": "fee_total_arithmetic"
@@ -935,10 +959,10 @@
     "brief_id": "calder",
     "grader": "deterministic",
     "source_app": "linear",
-    "source_id": "RAT-9",
+    "source_id": "ENG-412",
     "source_text": "Fee table totals don't add up on multi-phase engagements\n\nRepro: Meridian brief, two phases at 48,000 and 36,000. Generated total renders as 92,000. Should be 84,000. Happens on any brief with more than one phase.",
-    "source_author": "Danish Mohammed",
-    "source_url": "https://linear.app/ratchett/issue/RAT-9/fee-table-totals-dont-add-up-on-multi-phase-engagements",
+    "source_author": "ktran",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
       "derived_rule": "fee_total_arithmetic"
@@ -952,10 +976,10 @@
     "brief_id": "arbor",
     "grader": "deterministic",
     "source_app": "linear",
-    "source_id": "RAT-9",
+    "source_id": "ENG-412",
     "source_text": "Fee table totals don't add up on multi-phase engagements\n\nRepro: Meridian brief, two phases at 48,000 and 36,000. Generated total renders as 92,000. Should be 84,000. Happens on any brief with more than one phase.",
-    "source_author": "Danish Mohammed",
-    "source_url": "https://linear.app/ratchett/issue/RAT-9/fee-table-totals-dont-add-up-on-multi-phase-engagements",
+    "source_author": "ktran",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
       "derived_rule": "fee_total_arithmetic"
@@ -969,10 +993,10 @@
     "brief_id": "kestrel",
     "grader": "deterministic",
     "source_app": "linear",
-    "source_id": "RAT-9",
+    "source_id": "ENG-412",
     "source_text": "Fee table totals don't add up on multi-phase engagements\n\nRepro: Meridian brief, two phases at 48,000 and 36,000. Generated total renders as 92,000. Should be 84,000. Happens on any brief with more than one phase.",
-    "source_author": "Danish Mohammed",
-    "source_url": "https://linear.app/ratchett/issue/RAT-9/fee-table-totals-dont-add-up-on-multi-phase-engagements",
+    "source_author": "ktran",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
       "derived_rule": "fee_total_arithmetic"
@@ -986,10 +1010,10 @@
     "brief_id": "solent",
     "grader": "deterministic",
     "source_app": "linear",
-    "source_id": "RAT-9",
+    "source_id": "ENG-412",
     "source_text": "Fee table totals don't add up on multi-phase engagements\n\nRepro: Meridian brief, two phases at 48,000 and 36,000. Generated total renders as 92,000. Should be 84,000. Happens on any brief with more than one phase.",
-    "source_author": "Danish Mohammed",
-    "source_url": "https://linear.app/ratchett/issue/RAT-9/fee-table-totals-dont-add-up-on-multi-phase-engagements",
+    "source_author": "ktran",
+    "source_url": "",
     "derived_from_fix": false,
     "meta": {
       "derived_rule": "fee_total_arithmetic"
