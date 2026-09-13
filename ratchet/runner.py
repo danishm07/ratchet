@@ -6,6 +6,7 @@ import concurrent.futures as cf
 import json
 import sys
 import time
+from typing import Callable
 
 from . import judge, progress
 from .cases import Case, load as load_cases
@@ -48,9 +49,22 @@ def run_version(version: str, cases: list[Case], briefs: list[dict],
     return {"version": version, "results": results, "docs": docs}
 
 
-def run_all(versions: list[str], cases: list[Case], briefs: list[dict]) -> dict:
+def run_all(versions: list[str], cases: list[Case], briefs: list[dict],
+            on_version: Callable[[dict, str, int, int], None] | None = None) -> dict:
+    """Run every version. `on_version` is called with the payload-so-far after
+    each one, so a caller can render partial results while the rest still runs.
+
+    The callback takes the payload rather than runner doing anything with it —
+    runner stays orchestration and never learns what a report is.
+    """
     t0 = time.time()
-    runs = {v: run_version(v, cases, briefs) for v in versions}
+    runs: dict[str, dict] = {}
+    for i, v in enumerate(versions, 1):
+        runs[v] = run_version(v, cases, briefs)
+        if on_version is not None and i < len(versions):
+            on_version({"versions": versions[:i], "runs": runs,
+                        "seconds": round(time.time() - t0, 1), "llm": llm_stats()},
+                       v, i, len(versions))
     payload = {
         "versions": versions,
         "runs": runs,

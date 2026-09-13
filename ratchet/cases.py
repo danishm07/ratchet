@@ -20,6 +20,7 @@ class Case:
     source_app: str
     source_id: str
     source_text: str           # the human words this came from
+    source_author: str = ""    # who wrote them
     source_url: str = ""
     derived_from_fix: bool = False
     meta: dict[str, Any] = field(default_factory=dict)

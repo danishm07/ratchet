@@ -43,6 +43,8 @@ def build(payload: dict, cases: list[Case]) -> dict[str, Any]:
         rows.append({
             "id": c.id, "rule": c.rule, "brief": c.brief_id, "title": c.title,
             "grader": ran, "source_app": c.source_app,
+            "source_text": c.source_text, "source_author": c.source_author,
+            "source_url": c.source_url,
             "from_fix": c.derived_from_fix,
             "states": states, "reasons": reasons,
         })

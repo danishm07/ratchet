@@ -162,6 +162,77 @@ def dedupe(candidates: list[dict]) -> tuple[list[dict], list[dict]]:
     return kept, merges
 
 
+MATCH_PROMPT = """A grader checks the REQUIREMENT below. Separately, a set of rules was
+derived from real failure reports about the same document generator.
+
+Which derived rule — if any — describes the same underlying requirement as the
+grader? Same requirement means a document violating one would violate the other.
+Answer with its number, or null if none of them is the same requirement.
+
+REQUIREMENT
+{requirement}
+
+DERIVED RULES
+{options}
+
+Return ONLY JSON: {{"match": <number or null>, "reason": "<one short sentence>"}}"""
+
+
+def attach_sources(targets: list[Case], derived: list[Case], workers: int = 6) -> int:
+    """Give each target case the SourceItem its requirement actually came from.
+
+    The scored suite is built from the hand-written graders, which know nothing
+    about Slack or Linear or GitHub — so without this every row of the report's
+    provenance table reads "reference", and the one piece of evidence that three
+    apps were involved is gone. Extraction already found the originating message
+    for each derived rule; this matches grader to derived rule so that
+    attribution survives the swap.
+
+    One cached model call per distinct target rule. Returns how many matched.
+    """
+    origins: list[dict] = []
+    for c in derived:
+        if not any(o["rule"] == c.rule for o in origins):
+            origins.append({"rule": c.rule, "expectation": c.expectation, "case": c})
+    if not origins:
+        return 0
+
+    options = "\n".join(f"  {i}. {o['rule']}: {o['expectation']}"
+                        for i, o in enumerate(origins, 1))
+
+    def match(rule_exp: tuple[str, str]) -> tuple[str, dict | None]:
+        rule, expectation = rule_exp
+        data = complete_json(MATCH_PROMPT.format(requirement=expectation, options=options))
+        if not isinstance(data, dict):
+            return rule, None
+        i = data.get("match")
+        if not isinstance(i, int) or not 1 <= i <= len(origins):
+            return rule, None
+        return rule, origins[i - 1]
+
+    wanted = sorted({(c.rule, c.expectation) for c in targets})
+    found: dict[str, dict] = {}
+    with cf.ThreadPoolExecutor(max_workers=workers) as ex:
+        for rule, origin in progress.track(ex.map(match, wanted), len(wanted),
+                                           "attributing", "rules", done="attributed"):
+            if origin:
+                found[rule] = origin
+
+    for c in targets:
+        origin = found.get(c.rule)
+        if origin is None:
+            continue
+        src = origin["case"]
+        c.source_app = src.source_app
+        c.source_id = src.source_id
+        c.source_text = src.source_text
+        c.source_author = src.source_author
+        c.source_url = src.source_url
+        c.derived_from_fix = src.derived_from_fix
+        c.meta = dict(c.meta, derived_rule=src.rule)
+    return len(found)
+
+
 def extract(items: list[SourceItem], briefs: list[dict], workers: int = 6) -> tuple[list[Case], dict]:
     """Returns (cases, stats). One surviving rule becomes one case per brief:
     the complaint told us what to check, so we check it on every document."""
@@ -205,6 +276,7 @@ def extract(items: list[SourceItem], briefs: list[dict], workers: int = 6) -> tu
                 source_app=item.app,
                 source_id=item.external_id,
                 source_text=item.text[:400],
+                source_author=item.author,
                 source_url=item.url,
                 derived_from_fix=bool(d.get("is_fix")),
                 meta={"confidence": d.get("confidence")},

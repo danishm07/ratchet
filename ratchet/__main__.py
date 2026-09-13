@@ -51,7 +51,7 @@ def cmd_run(args) -> None:
     if any("FAILED" in s for s in status.values()):
         print("  (a failed source is reported, never silently skipped)")
 
-    cs, ex_stats = extract.extract(items, briefs)
+    derived, ex_stats = extract.extract(items, briefs)
     print(f"\nextraction: {ex_stats['items']} items -> {ex_stats['accepted']} checkable "
           f"-> {ex_stats['rules']} rules -> {ex_stats['cases']} cases "
           f"({ex_stats['not_checkable']} discarded, {ex_stats['parse_failed']} unparseable)")
@@ -64,8 +64,9 @@ def cmd_run(args) -> None:
     # unvalidated judge is a rubber ruler (CLAUDE.md rule 3). Generated graders
     # are measured against these by `compare-graders`; they never score a run.
     cs = judge.reference_cases(briefs)
+    matched = extract.attach_sources(cs, derived)
     print(f"  scored by {len(judge.REFERENCE_RULES)} hand-written graders "
-          f"-> {len(cs)} cases")
+          f"-> {len(cs)} cases ({matched} traced back to a source item)")
     case_store.save(cs)
 
     val = judge.validate()
@@ -76,7 +77,13 @@ def cmd_run(args) -> None:
               f"= {val['agreement']:.0%} on rule '{val['rule']}'")
 
     versions = args.versions.split(",")
-    payload = runner.run_all(versions, cs, briefs)
+
+    def draft(partial: dict, version: str, done: int, total: int) -> None:
+        """Publish the grid as each version lands, so the page fills in live."""
+        report.write(matrix.build(partial, cs), partial, val, ex_stats,
+                     live={"version": version, "done": done, "total": total})
+
+    payload = runner.run_all(versions, cs, briefs, on_version=draft)
     m = matrix.build(payload, cs)
     print("\n" + matrix.summary_line(m))
 
